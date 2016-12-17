@@ -183,15 +183,28 @@ int main() {
     std::cout << "                         [ " << scalarMultProd[1][0] << ", " << scalarMultProd[1][1] << ", " << scalarMultProd[1][2] << "]" << std::endl;
     std::cout << "                         [ " << scalarMultProd[2][0] << ", " << scalarMultProd[2][1] << ", " << scalarMultProd[2][2] << "]" << std::endl << std::endl;
 
-    std::cout << std::endl << "Check Test Matrix Scalar Multiplication" << std::endl;
-    std::cout << "---------------------------------------" << std::endl;
-    std::cout << "3.4*N(17.3,9.6) = [[ -654582.0, 6.54204×10^7, -2.61832×10^6 ]"  << std::endl;
-    std::cout << "                  [ 6.47659×10^7, 1.1344×10^7, -15791.2]]" << std::endl << std::endl;
-    
-    std::vector< std::vector < double > > testScalarMult = testPolyArray.multScalar(3.4).evalAt(17.3,9.6);
-    std::cout << "3.4*N_test(17.3,9.6) = [[" << testScalarMult[0][0] << ", " << testScalarMult[0][1] << ", " << testScalarMult[0][2] << "]"  << std::endl;
-    std::cout << "                        [" << testScalarMult[1][0] << ", " << testScalarMult[1][1] << ", " << testScalarMult[1][2] << "]]"  << std::endl << std::endl;
+    XyShapeFuncVector testXyFuncVect;
+    dummyPolyRow.clear();
+    dummyPolyRow.push_back(testFuncF);
+    dummyPolyRow.push_back(testFuncG);
+    dummyPolyRow.push_back(testFuncH);
+    dummyPolyRow.push_back(testFuncI);
+    testXyFuncVect.addRow(dummyPolyRow);
+    std::vector< std::vector < double > > testXyFuncVals = testXyFuncVect.evalAt(1.0,0.5);
 
-// Test XyShapeFuncVector and XyShapeFuncVector.getGrad()
+    std::cout << std::endl << "Check XY Shape Function Vector" << std::endl;
+    std::cout << "------------------------------" << std::endl;
+    std::cout << "N(x,y) = [ f(x,y), g(x,y), h(x,y), i(x,y) ]" << std::endl;
+    std::cout << "N(1.0,0.5) = [ 0.95, 6.225, 3.8, 7.175 ]" << std::endl;
+    std::cout << "N_test(1.0,0.5) = [" << testXyFuncVals[0][0] << ", " << testXyFuncVals[0][1] << ", " << testXyFuncVals[0][2] << ", " << testXyFuncVals[0][3] <<  "]" << std::endl << std::endl;
+
+    std::vector< std::vector < double > > testXyFuncGradVals = testXyFuncVect.getGrad().evalAt(1.0,0.5);
+    std::cout << std::endl << "Check Gradient of XY Shape Function Vector" << std::endl;
+    std::cout << "------------------------------" << std::endl;
+    std::cout << "grad(N)(1.0,0.5) = [[ -3.425, 6.025, -13.7, 2.6 ]" << std::endl;
+    std::cout << "                    [ -3.2, 14.55, -12.8, 11.35 ]]" << std::endl;
+    std::cout << "grad(N_test)(1.0,0.5) = [[" << testXyFuncGradVals[0][0] << ", " << testXyFuncGradVals[0][1] << ", " << testXyFuncGradVals[0][2] << ", " << testXyFuncGradVals[0][3] <<  "]" << std::endl;
+    std::cout << "                         [" << testXyFuncGradVals[1][0] << ", " << testXyFuncGradVals[1][1] << ", " << testXyFuncGradVals[1][2] << ", " << testXyFuncGradVals[1][3] <<  "]]" << std::endl << std::endl;
+
 
 }; 

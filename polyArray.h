@@ -26,8 +26,9 @@ class PolyArray {
     PolyArray multScalar(double multVal);
 };
 
-class XyShapeFuncVector : protected PolyArray{
+class XyShapeFuncVector : public PolyArray{
     // Matrix of shape functions for 2-D in x-y plane
+    // varOne is X, varTwo is Y
     
     public:
 

@@ -208,6 +208,8 @@ PolyArray PolyArray::multScalar(double multVal) {
 
 PolyArray XyShapeFuncVector::getGrad() {
     
+    // Broken?
+
     std::vector <TwoDimPoly> tempRow;
     PolyArray newShapeFunc;
 
