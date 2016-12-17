@@ -3,7 +3,7 @@
 
 class PolyArray {
 
-    private:
+    protected:
 
     std::vector< std::vector< TwoDimPoly > > polyArrayTwoDim;
     int numbOfRows;
@@ -23,11 +23,16 @@ class PolyArray {
     PolyArray matMultScalarBehind(std::vector< std::vector< double > > doubleMatrix);
 
     // To be implemented
-    TwoDimPoly multScalar(double multVal);
-    PolyArray getPolyArrayGrad();
+    PolyArray multScalar(double multVal);
 };
 
-class XyShapeMatrix : public PolyArray{
+class XyShapeFuncVector : protected PolyArray{
     // Matrix of shape functions for 2-D in x-y plane
+    
+    public:
+
+    XyShapeFuncVector() : PolyArray() {};
+
+    PolyArray getGrad();
 };
 

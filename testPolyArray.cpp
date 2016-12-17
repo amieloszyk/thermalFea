@@ -183,4 +183,15 @@ int main() {
     std::cout << "                         [ " << scalarMultProd[1][0] << ", " << scalarMultProd[1][1] << ", " << scalarMultProd[1][2] << "]" << std::endl;
     std::cout << "                         [ " << scalarMultProd[2][0] << ", " << scalarMultProd[2][1] << ", " << scalarMultProd[2][2] << "]" << std::endl << std::endl;
 
+    std::cout << std::endl << "Check Test Matrix Scalar Multiplication" << std::endl;
+    std::cout << "---------------------------------------" << std::endl;
+    std::cout << "3.4*N(17.3,9.6) = [[ -654582.0, 6.54204×10^7, -2.61832×10^6 ]"  << std::endl;
+    std::cout << "                  [ 6.47659×10^7, 1.1344×10^7, -15791.2]]" << std::endl << std::endl;
+    
+    std::vector< std::vector < double > > testScalarMult = testPolyArray.multScalar(3.4).evalAt(17.3,9.6);
+    std::cout << "3.4*N_test(17.3,9.6) = [[" << testScalarMult[0][0] << ", " << testScalarMult[0][1] << ", " << testScalarMult[0][2] << "]"  << std::endl;
+    std::cout << "                        [" << testScalarMult[1][0] << ", " << testScalarMult[1][1] << ", " << testScalarMult[1][2] << "]]"  << std::endl << std::endl;
+
+// Test XyShapeFuncVector and XyShapeFuncVector.getGrad()
+
 }; 

@@ -191,3 +191,36 @@ PolyArray PolyArray::matMultScalarBehind(std::vector< std::vector< double > > do
 
     return prodArray;
 };
+
+PolyArray PolyArray::multScalar(double multVal) {
+
+    std::vector <TwoDimPoly> tempRow;
+    PolyArray newPolyArray;
+    for (int rowIdx = 0; rowIdx < numbOfRows; ++rowIdx) {
+        for (int colIdx = 0; colIdx < numbOfCols; ++colIdx) {
+            tempRow.push_back(polyArrayTwoDim[rowIdx][colIdx].multScalar(multVal));
+        };
+        newPolyArray.addRow(tempRow);
+        tempRow.clear();
+    };
+    return newPolyArray;
+};
+
+PolyArray XyShapeFuncVector::getGrad() {
+    
+    std::vector <TwoDimPoly> tempRow;
+    PolyArray newShapeFunc;
+
+    for (int colIdx = 0; colIdx < numbOfCols; ++colIdx) {
+        tempRow.push_back(polyArrayTwoDim[0][colIdx].getDerivVarOne());
+    };
+    newShapeFunc.addRow(tempRow);
+
+    for (int colIdx = 0; colIdx < numbOfCols; ++colIdx) {
+        tempRow.push_back(polyArrayTwoDim[0][colIdx].getDerivVarTwo());
+    };
+    newShapeFunc.addRow(tempRow);
+
+    return newShapeFunc;
+
+};
