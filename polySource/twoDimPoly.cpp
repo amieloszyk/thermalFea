@@ -1,6 +1,7 @@
 #include "twoDimPolyClass.h"
 #include <math.h>
 #include <algorithm>
+#include <iostream>
 
 TwoDimPoly::TwoDimPoly(std::vector<OneDimPoly> inpPolyArray) {
     varOnePolyArray = inpPolyArray;
@@ -77,6 +78,31 @@ TwoDimPoly TwoDimPoly::addTwoDimPoly(TwoDimPoly otherTwoDimPoly) {
     return newTwoDimPoly;
 };
 
+TwoDimPoly TwoDimPoly::subTwoDimPoly(TwoDimPoly otherTwoDimPoly) {
+    
+    std::vector<OneDimPoly> otherVarOneArray = otherTwoDimPoly.getVarOneArray();
+    int otherVarTwoOrder = otherTwoDimPoly.getVarTwoOrder();
+    int newVarTwoPolyOrder = std::max(varTwoPolyOrder,otherVarTwoOrder);
+    std::vector<OneDimPoly> newVarTwoArray;
+    std::vector<double> dummyVarOneCoeff(1);
+    dummyVarOneCoeff[0] = 0.0;
+
+    for (int varTwoIdx = 0; varTwoIdx <= newVarTwoPolyOrder; ++varTwoIdx) {
+        
+        newVarTwoArray.push_back(OneDimPoly(dummyVarOneCoeff));
+
+        if (varTwoIdx <= varTwoPolyOrder) {
+            newVarTwoArray[varTwoIdx] = newVarTwoArray[varTwoIdx].subOneDimPoly(varOnePolyArray[varTwoIdx]);
+        };
+        if (varTwoIdx <= otherVarTwoOrder) {
+            newVarTwoArray[varTwoIdx] = newVarTwoArray[varTwoIdx].subOneDimPoly(otherVarOneArray[varTwoIdx]);
+        };
+    };
+    
+    TwoDimPoly newTwoDimPoly(newVarTwoArray);
+
+    return newTwoDimPoly;
+};
 
 std::vector<OneDimPoly> TwoDimPoly::getVarOneArray() {
     return varOnePolyArray;
@@ -132,5 +158,23 @@ TwoDimPoly TwoDimPoly::multScalar(double scalarMult) {
 
     TwoDimPoly newVarTwoPoly(newVarOneArray);
     return newVarTwoPoly;
+
+};
+
+double TwoDimPoly::findIntegralOverRange(double varOneFirstVal, double varOneSecondVal, 
+                                         double varTwoFirstVal, double varTwoSecondVal) {
+
+    std::vector< double > varTwoIntCoeffVect; // Vector of coefficients from integrating varTwo
+    double varOneIntVal;
+    for (int coeffIdx = 0; coeffIdx <= varTwoPolyOrder; ++coeffIdx) {
+        varOneIntVal = varOnePolyArray[coeffIdx].findIntegralOverRange(varOneFirstVal, varOneSecondVal);
+        varTwoIntCoeffVect.push_back(varOneIntVal);
+    };
+    
+    OneDimPoly varTwoIntPoly = OneDimPoly(varTwoIntCoeffVect);
+    double integralValue = varTwoIntPoly.findIntegralOverRange(varTwoFirstVal, varTwoSecondVal);
+
+    return integralValue;
+
 
 };

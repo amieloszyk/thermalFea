@@ -21,15 +21,14 @@ class TwoDimPoly {
         TwoDimPoly getDerivVarOne();
         TwoDimPoly getDerivVarTwo();
         TwoDimPoly multScalar(double scalarMult);
-        
-        // Yet to be implemented
         TwoDimPoly addTwoDimPoly(TwoDimPoly otherTwoDimPoly);
-        TwoDimPoly subTwoDimPoly(TwoDimPoly otherTwoDimPoly);
-        TwoDimPoly multOneDimPoly(OneDimPoly otherOneDimPoly);
-
-        
         double findIntegralOverRange(double varOneFirstVal, double varOneSecondVal, 
                                      double varTwoFirstVal, double varTwoSecondVal);
+
+        // Yet to be implemented
+        
+        TwoDimPoly subTwoDimPoly(TwoDimPoly otherTwoDimPoly);
+        TwoDimPoly multOneDimPoly(OneDimPoly otherOneDimPoly);
 
         void printCoeffs();
 
