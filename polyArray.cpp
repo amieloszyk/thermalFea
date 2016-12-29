@@ -129,13 +129,12 @@ PolyArray PolyArray::matMultScalarAhead(std::vector< std::vector< double > > dou
     TwoDimPoly prodPoly(zeroOneDimPolyVect);
 
     for (int rowIdx = 0; rowIdx < otherNumbOfRows; ++rowIdx) {
-        std::cout << "row" << rowIdx << std::endl;
         for (int newColIdx = 0; newColIdx < numbOfCols; ++newColIdx) {
-            std::cout << "newCol" << newColIdx << std::endl;
+            
             prodPoly = TwoDimPoly(zeroOneDimPolyVect);
 
             for (int colIdx = 0; colIdx < otherNumbOfCols; ++colIdx) {
-                std::cout << "col" << colIdx << std::endl;
+                
                 tempPoly = polyArrayTwoDim[colIdx][newColIdx].multScalar(doubleMatrix[rowIdx][colIdx]);
                 prodPoly = prodPoly.addTwoDimPoly(tempPoly);
             };
@@ -205,6 +204,21 @@ PolyArray PolyArray::multScalar(double multVal) {
     };
     return newPolyArray;
 };
+
+std::vector< std::vector< double > > PolyArray::findIntegralOverRange(double varOneFirstVal, double varOneSecondVal, 
+                                                                      double varTwoFirstVal, double varTwoSecondVal) {
+    
+    std::vector< std::vector< double > > arrayIntegralVals(numbOfCols, std::vector< double >(numbOfRows, 0.0));
+
+    for (int rowIdx = 0; rowIdx < numbOfRows; ++rowIdx) {
+        for (int colIdx = 0; colIdx < numbOfCols; ++colIdx) {
+            arrayIntegralVals[rowIdx][colIdx] = polyArrayTwoDim[rowIdx][colIdx].findIntegralOverRange(varOneFirstVal,varOneSecondVal, 
+                                                                                                      varTwoFirstVal,varTwoSecondVal);
+        };
+    };
+    return arrayIntegralVals;
+};
+
 
 PolyArray XyShapeFuncVector::getGrad() {
     

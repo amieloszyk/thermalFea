@@ -21,9 +21,11 @@ class PolyArray {
     PolyArray matMultPolyArray(PolyArray otherPolyArray);
     PolyArray matMultScalarAhead(std::vector< std::vector< double > > doubleMatrix);
     PolyArray matMultScalarBehind(std::vector< std::vector< double > > doubleMatrix);
-
-    // To be implemented
     PolyArray multScalar(double multVal);
+    std::vector< std::vector< double > > findIntegralOverRange(double varOneFirstVal, double varOneSecondVal, 
+                                                               double varTwoFirstVal, double varTwoSecondVal);
+
+    
 };
 
 class XyShapeFuncVector : public PolyArray{
