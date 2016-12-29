@@ -112,6 +112,17 @@ int main() {
     std::cout << "                    [ " << testValArray[1][0] << ", " << testValArray[1][1];
     std::cout << ", " << testValArray[1][2] << " ]]" << std::endl << std::endl;
 
+    std::cout << std::endl << "Check Scalar Multiplication of Test Array" << std::endl;
+    std::cout << "-----------------------------------------" << std::endl;
+    std::cout << "N(17.3,9.6)*4 = [[-770096.0, 76965200.0, -3080380.0]"  << std::endl;
+    std::cout << "               [76195200.0, 13345880.0, -18577.92]]" << std::endl << std::endl;
+
+    testValArray = testPolyArray.multScalar(4.0).evalAt(17.3, 9.6);
+    std::cout << "N_test(17.3,9.6)*4 = [[ " << testValArray[0][0] << ", " << testValArray[0][1];
+    std::cout << ", " << testValArray[0][2] << " ]" << std::endl;
+    std::cout << "                     [ " << testValArray[1][0] << ", " << testValArray[1][1];
+    std::cout << ", " << testValArray[1][2] << " ]]" << std::endl << std::endl;
+
     std::cout << "Check Transpose Test Array" << std::endl;
     std::cout << "--------------------------" << std::endl;
     std::cout << "trans(N)(17.3,9.6) = [[ -192524.0, 1.90488×10^7 ]"  << std::endl;
@@ -183,6 +194,14 @@ int main() {
     std::cout << "                         [ " << scalarMultProd[1][0] << ", " << scalarMultProd[1][1] << ", " << scalarMultProd[1][2] << "]" << std::endl;
     std::cout << "                         [ " << scalarMultProd[2][0] << ", " << scalarMultProd[2][1] << ", " << scalarMultProd[2][2] << "]" << std::endl << std::endl;
 
+    std::vector< std::vector < double > > testIntegralVals = testPolyArray.findIntegralOverRange(0.0,2.0,0.5,2.5);
+    std::cout << std::endl << "Check Integral Over x=0,2 y=0.5,2.5" << std::endl;
+    std::cout << "-----------------------------------" << std::endl;
+    std::cout << "integral(N)= [[ " << testFuncF.findIntegralOverRange(0.0,2.0,0.5,2.5) << ", " << testFuncG.findIntegralOverRange(0.0,2.0,0.5,2.5) << ", " << testFuncH.findIntegralOverRange(0.0,2.0,0.5,2.5) << "]" << std::endl;
+    std::cout << "                    [[ " << testFuncI.findIntegralOverRange(0.0,2.0,0.5,2.5) << ", " << testFuncJ.findIntegralOverRange(0.0,2.0,0.5,2.5) << ", " << testFuncK.findIntegralOverRange(0.0,2.0,0.5,2.5) << "]" << std::endl;
+    std::cout << "integral(N) = [[" << testIntegralVals[0][0] << ", " << testIntegralVals[0][1] << ", " << testIntegralVals[0][2] <<  "]" << std::endl;
+    std::cout << "                         [" << testIntegralVals[1][0] << ", " << testIntegralVals[1][1] << ", " << testIntegralVals[1][2] << "]]" << std::endl << std::endl;
+
     XyShapeFuncVector testXyFuncVect;
     dummyPolyRow.clear();
     dummyPolyRow.push_back(testFuncF);
@@ -205,6 +224,7 @@ int main() {
     std::cout << "                    [ -3.2, 14.55, -12.8, 11.35 ]]" << std::endl;
     std::cout << "grad(N_test)(1.0,0.5) = [[" << testXyFuncGradVals[0][0] << ", " << testXyFuncGradVals[0][1] << ", " << testXyFuncGradVals[0][2] << ", " << testXyFuncGradVals[0][3] <<  "]" << std::endl;
     std::cout << "                         [" << testXyFuncGradVals[1][0] << ", " << testXyFuncGradVals[1][1] << ", " << testXyFuncGradVals[1][2] << ", " << testXyFuncGradVals[1][3] <<  "]]" << std::endl << std::endl;
+
 
 
 }; 
