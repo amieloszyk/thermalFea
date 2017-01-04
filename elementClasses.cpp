@@ -80,6 +80,11 @@ XyLinearThermalMeloshElement::XyLinearThermalMeloshElement()
     degreesOfFreedom = 1;
     halfHeight = 0.0;
     halfWidth = 0.0;
+    loadOnSurf[0] = false;
+    loadOnSurf[1] = false;
+    loadOnSurf[2] = false;
+    loadOnSurf[3] = false;
+    loadOnBody = false;
 };
 
 void XyLinearThermalMeloshElement::checkNodeCoords() {

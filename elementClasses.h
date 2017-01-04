@@ -68,15 +68,15 @@ class GeneralElement {
 
 class XyLinearThermalMeloshElement : public GeneralElement{
 /*
-(x4,y4)                (x3,y3)
-   O----------|----------O
-   |          |          |     /\ y
-   |          | (0,0)    |     |
-  -|----------|----------|-   -|--> x
-   |          |          |
-   |          |          |
-   O----------|----------O
-(x1,y1)                (x2,y2)
+  (x4,y4)      S3        (x3,y3)
+     O----------|----------O
+     |          |          |       /\ y
+     |          | (0,0)    |       |
+ S4 -|----------|----------|-  S2 -|--> x
+     |          |          |
+     |          |          |
+     O----------|----------O
+  (x1,y1)      S1        (x2,y2)
 
 DOF:
     - Temperature
@@ -89,6 +89,10 @@ DOF:
         double halfHeight;
         std::vector< std::vector< double > > condMatrix;
         XyShapeFuncVector shapeFuncVect;
+        bool loadOnSurf[4];
+        PolyArray surfLoads[4];
+        bool loadOnBody;
+        PolyArray bodyLoad;
 
     public: //TODO: Some of these ought to be private
 
@@ -114,6 +118,8 @@ DOF:
         // Implemented not tested
         
         // Not implemented
+        void setSurfaceLoad(int surfNumb, TwoDimPoly loadShape);
+        void setBodyLoad(TwoDimPoly loadShape);
         
 };
 
