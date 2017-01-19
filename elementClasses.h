@@ -90,7 +90,7 @@ DOF:
         std::vector< std::vector< double > > condMatrix;
         XyShapeFuncVector shapeFuncVect;
         bool loadOnSurf[4];
-        PolyArray surfLoads[4];
+        std::vector<OneDimPoly> surfLoads[4];
         bool loadOnBody;
         PolyArray bodyLoad;
 
@@ -118,8 +118,8 @@ DOF:
         // Implemented not tested
         
         // Not implemented
-        void setSurfaceLoad(int surfNumb, TwoDimPoly loadShape);
+        void setSurfaceLoad(int surfNumb, OneDimPoly loadShape);
         void setBodyLoad(TwoDimPoly loadShape);
-        
+        std::vector<double> getLoadVect();
 };
 
