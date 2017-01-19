@@ -24,8 +24,10 @@ class TwoDimPoly {
         TwoDimPoly addTwoDimPoly(TwoDimPoly otherTwoDimPoly);
         double findIntegralOverRange(double varOneFirstVal, double varOneSecondVal, 
                                      double varTwoFirstVal, double varTwoSecondVal);
+        OneDimPoly getFixedVarOnePoly(double fixedVarOne);
 
         // Yet to be implemented
+        OneDimPoly getFixedVarTwoPoly(double fixedVarTwo);
         
         TwoDimPoly subTwoDimPoly(TwoDimPoly otherTwoDimPoly);
         TwoDimPoly multOneDimPoly(OneDimPoly otherOneDimPoly);

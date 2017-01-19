@@ -175,6 +175,30 @@ double TwoDimPoly::findIntegralOverRange(double varOneFirstVal, double varOneSec
     double integralValue = varTwoIntPoly.findIntegralOverRange(varTwoFirstVal, varTwoSecondVal);
 
     return integralValue;
+};
 
+OneDimPoly TwoDimPoly::getFixedVarOnePoly(double fixedVarOne) {
 
+    std::vector< double > coeffVect(varTwoPolyOrder+1);
+    for (int coeffIdx = 0; coeffIdx <= varTwoPolyOrder; ++coeffIdx) {
+        coeffVect[coeffIdx] = varOnePolyArray[coeffIdx].evalAt(fixedVarOne);
+    };
+    
+    OneDimPoly fixedVarOnePoly(coeffVect);
+    
+    return fixedVarOnePoly;
+};
+
+OneDimPoly TwoDimPoly::getFixedVarTwoPoly(double fixedVarTwo) {
+
+    OneDimPoly fixedVarTwoPoly(std::vector<double>(1,0.0));
+    double fixedVarTwoExp;
+
+    for (int coeffIdx = 0; coeffIdx <= varTwoPolyOrder; ++coeffIdx) {
+        
+        fixedVarTwoExp = pow(fixedVarTwo,double(coeffIdx));
+        fixedVarTwoPoly = fixedVarTwoPoly.addOneDimPoly(varOnePolyArray[coeffIdx].multScalar(fixedVarTwoExp));
+    };
+    
+    return fixedVarTwoPoly;
 };
