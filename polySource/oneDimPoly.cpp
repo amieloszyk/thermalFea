@@ -117,7 +117,7 @@ OneDimPoly OneDimPoly::addOneDimPoly(OneDimPoly otherOneDimPoly) {
     };
 
     OneDimPoly newOneDimPoly(newCoeffArray);
-    return newCoeffArray;
+    return newOneDimPoly;
 };
 
 OneDimPoly OneDimPoly::subOneDimPoly(OneDimPoly otherOneDimPoly) {

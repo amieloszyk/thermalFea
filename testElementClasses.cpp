@@ -217,7 +217,37 @@ void testXyLinearThermalMeloshElement() {
     std::cout << "K_test = [[" << slideStiffMatrix[0][0] << ", " << slideStiffMatrix[0][1] << ", " << slideStiffMatrix[0][2] << ", " << slideStiffMatrix[0][3] << "],"<< std::endl;
     std::cout << "          [" << slideStiffMatrix[1][0] << ", " << slideStiffMatrix[1][1] << ", " << slideStiffMatrix[1][2] << ", " << slideStiffMatrix[1][3] << "],"<< std::endl;
     std::cout << "          [" << slideStiffMatrix[2][0] << ", " << slideStiffMatrix[2][1] << ", " << slideStiffMatrix[2][2] << ", " << slideStiffMatrix[2][3] << "],"<< std::endl;
-    std::cout << "          [" << slideStiffMatrix[3][0] << ", " << slideStiffMatrix[3][1] << ", " << slideStiffMatrix[3][2] << ", " << slideStiffMatrix[3][3] << "]]"<< std::endl;
+    std::cout << "          [" << slideStiffMatrix[3][0] << ", " << slideStiffMatrix[3][1] << ", " << slideStiffMatrix[3][2] << ", " << slideStiffMatrix[3][3] << "]]"<< std::endl << std::endl;
+
+    std::vector<double> tempCoeffs;
+    tempCoeffs.push_back(2.0);
+    tempCoeffs.push_back(3.0);
+    OneDimPoly testSurfLoadOne(tempCoeffs); // f(x) = 2.0+3.0*x
+    tempCoeffs[0] = 1.0;
+    tempCoeffs[1] = 2.0;
+    OneDimPoly testSurfLoadFour(tempCoeffs); // f(x) = 1.0+2.0*x
+    
+    slideTestElement.setSurfaceLoadInLocCoords(1, testSurfLoadOne);
+    slideTestElement.setSurfaceLoadInLocCoords(4, testSurfLoadFour);
+
+    std::vector<double> surfOneLoad = slideTestElement.getLoadOnSurf(1);
+    std::vector<double> surfTwoLoad = slideTestElement.getLoadOnSurf(2);
+    std::vector<double> surfThreeLoad = slideTestElement.getLoadOnSurf(3);
+    std::vector<double> surfFourLoad = slideTestElement.getLoadOnSurf(4);
+
+    std::cout << "Surface Load Tests" << std::endl;
+    std::cout << "-------------------------------------------------------" << std::endl;
+    std::cout << "Surface #1 Local Shape Func: f(x_loc) = 2.0 + 3.0*x_loc" << std::endl;
+    std::cout << "Surface #2 Local Shape Func: f(x_loc) = 1.0 + 2.0*x_loc" << std::endl;
+    std::cout << "Known load from Surface #1 (transposed): [1.3, 3.9, 0.0, 0.0]" << std::endl;
+    std::cout << "Found load from Surface #1 (transposed): [" << surfOneLoad[0] << " ," << surfOneLoad[1] << " ," << surfOneLoad[2] << " ," << surfOneLoad[3] << "]" << std::endl;
+    std::cout << "Known load from Surface #2 (transposed): [0.0, 0.0, 0.0, 0.0]" << std::endl;
+    std::cout << "Found load from Surface #1 (transposed): [" << surfTwoLoad[0] << " ," << surfTwoLoad[1] << " ," << surfTwoLoad[2] << " ," << surfTwoLoad[3] << "]" << std::endl;
+    std::cout << "Known load from Surface #3 (transposed): [0.0, 0.0, 0.0, 0.0]" << std::endl;
+    std::cout << "Found load from Surface #1 (transposed): [" << surfThreeLoad[0] << " ," << surfThreeLoad[1] << " ," << surfThreeLoad[2] << " ," << surfThreeLoad[3] << "]" << std::endl;
+    std::cout << "Known load from Surface #4 (transposed): [0.4333, 0.0, 0.0, 0.8667]" << std::endl;
+    std::cout << "Found load from Surface #1 (transposed): [" << surfFourLoad[0] << " ," << surfFourLoad[1] << " ," << surfFourLoad[2] << " ," << surfFourLoad[3] << "]" << std::endl;
+    std::cout << "" << std::endl;
 
 };
 

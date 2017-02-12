@@ -77,6 +77,7 @@ XyLinearThermalMeloshElement::XyLinearThermalMeloshElement()
 :condMatrix (2,std::vector< double >(2,0.0) )
 {
     numbOfNodes = 4;
+    numbOfSurfs = numbOfNodes;
     degreesOfFreedom = 1;
     halfHeight = 0.0;
     halfWidth = 0.0;
@@ -85,6 +86,12 @@ XyLinearThermalMeloshElement::XyLinearThermalMeloshElement()
     loadOnSurf[2] = false;
     loadOnSurf[3] = false;
     loadOnBody = false;
+    
+    std::vector<double> zeroCoeff;
+    zeroCoeff.push_back(0.0);
+    for(int idx = 0; idx < numbOfSurfs; ++idx) {
+        locSurfLoads.push_back(zeroCoeff);
+    };
 };
 
 void XyLinearThermalMeloshElement::checkNodeCoords() {
@@ -264,4 +271,79 @@ std::vector< std::vector< double > > XyLinearThermalMeloshElement::getStiffnessM
     std::vector< std::vector< double > > stiffMatrix = stiffIntegrand.findIntegralOverRange(nodeLocCoordVect[0][0],nodeLocCoordVect[1][0],
                                                                                             nodeLocCoordVect[0][1],nodeLocCoordVect[3][1]);
     return stiffMatrix;
+};
+
+void XyLinearThermalMeloshElement::setSurfaceLoadInLocCoords(int surfNumb, OneDimPoly locLoadShape) {
+    /*
+    Note that the local load shape must be defined as a function of position on the applicable
+    surface in local coordinates. transformations are likely necessary.
+    */
+
+    int surfIdx = surfNumb - 1;
+    loadOnSurf[surfIdx] = true;
+    locSurfLoads[surfIdx].multScalar(0.0);
+    locSurfLoads[surfIdx] = locSurfLoads[surfIdx].addOneDimPoly(locLoadShape);
+};
+
+std::vector<double> XyLinearThermalMeloshElement::getLoadOnSurf(int surfNumb){
+    
+    int surfIdx = surfNumb - 1;
+
+    std::vector<double> surfLoadVect;
+    for(int idx = 0; idx < numbOfNodes; ++idx) {
+        surfLoadVect.push_back(0.0);
+    };
+
+    if (loadOnSurf[surfIdx]) {
+        
+        OneDimPoly surfFuncIntShapeFuncs(std::vector<double>(1,0.0)); // Appropriate shape functions for integrating surface loads
+        OneDimPoly tempOneDimPoly(std::vector<double>(1,0.0));
+        
+        double fixedX;
+        double fixedY;
+        double lowerIntBound;
+        double upperIntBound;
+        PolyArray transShapeFuncs = shapeFuncVect.transpose();
+        
+        for (int shapeIdx = 0; shapeIdx < numbOfNodes; ++shapeIdx) {
+            
+            TwoDimPoly tempTwoDimPoly = transShapeFuncs.getPoly(shapeIdx, 0);
+            
+            if (surfNumb == 1){
+                // Bottom surface
+                fixedY = -halfHeight;
+                lowerIntBound = -halfWidth;
+                upperIntBound = halfWidth;
+                tempOneDimPoly = tempTwoDimPoly.getFixedVarTwoPoly(fixedY);
+            }
+            else if (surfNumb == 2){
+                // Right surface
+                fixedX = halfWidth;
+                lowerIntBound = -halfHeight;
+                upperIntBound = halfHeight;
+                tempOneDimPoly = tempTwoDimPoly.getFixedVarOnePoly(fixedX);
+            }
+            else if (surfNumb == 3){
+                // Top surface
+                fixedY = halfHeight;
+                lowerIntBound = -halfWidth;
+                upperIntBound = halfWidth;
+                tempOneDimPoly = tempTwoDimPoly.getFixedVarTwoPoly(fixedY);
+            }
+            else if (surfNumb == 4){
+                // Left surface
+                fixedX = -halfWidth;
+                lowerIntBound = -halfHeight;
+                upperIntBound = halfHeight;
+                tempOneDimPoly = tempTwoDimPoly.getFixedVarOnePoly(fixedX);
+            }
+
+            surfFuncIntShapeFuncs = tempOneDimPoly;
+            surfFuncIntShapeFuncs = surfFuncIntShapeFuncs.multScalar(elemThickness);
+            surfFuncIntShapeFuncs = surfFuncIntShapeFuncs.multOneDimPoly(locSurfLoads[surfIdx]);
+            surfLoadVect[shapeIdx] = surfFuncIntShapeFuncs.findIntegralOverRange(lowerIntBound, upperIntBound);
+        };
+    }
+
+    return surfLoadVect;
 };

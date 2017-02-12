@@ -10,6 +10,7 @@ class GeneralElement {
     protected:
         int elementNumb;
         int numbOfNodes;
+        int numbOfSurfs;
         int degreesOfFreedom;
         std::vector< int > nodeLocNumbVect;
         std::vector< int > nodeGlobNumbVect; 
@@ -90,7 +91,7 @@ DOF:
         std::vector< std::vector< double > > condMatrix;
         XyShapeFuncVector shapeFuncVect;
         bool loadOnSurf[4];
-        std::vector<OneDimPoly> surfLoads[4];
+        std::vector<OneDimPoly> locSurfLoads;
         bool loadOnBody;
         PolyArray bodyLoad;
 
@@ -116,10 +117,17 @@ DOF:
         std::vector< std::vector< double > > getStiffnessMatrix();
 
         // Implemented not tested
-        
+        void setSurfaceLoadInLocCoords(int surfNumb, OneDimPoly locLoadShape);
+
         // Not implemented
-        void setSurfaceLoad(int surfNumb, OneDimPoly loadShape);
+        
+        
+        
+        std::vector<double> getLoadOnSurf(int surfNumb);
+        
         void setBodyLoad(TwoDimPoly loadShape);
-        std::vector<double> getLoadVect();
+        std::vector<double> getBodyLoadVect();
+        
+        std::vector<double> getTotalLoadVect();
 };
 
