@@ -4,7 +4,7 @@
 
 void testGeneralElements() {
 
-    GeneralElement testGenElem;
+    ThermalElement testGenElem;
     std::cout << "Test General Element Class Functionality" << std::endl;
     std::cout << "----------------------------------------" << std::endl;
 
