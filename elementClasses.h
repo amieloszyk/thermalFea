@@ -1,10 +1,9 @@
 #include <vector>
 #include "polyArray.cpp"
 
-class GeneralElement {
+class ThermalElement {
     /* 
-    This is a generalized class for elements. I should consider making this 
-    specific to 2-D elements...
+    This is a generalized class for heat transfer elements
     */
 
     protected:
@@ -35,21 +34,15 @@ class GeneralElement {
         //      [] dof naming
     public:
 
-        GeneralElement();
+        ThermalElement();
 
         // Not implemented
-        
-        std::vector< std::vector< double > > getStiffnessMatrix();
-        std::vector< double > getLoadVector();
         void setNodeValues(std::vector< double > nodeValueVect);
         void setFixedNodes(std::vector< bool > isNodeFixedVect);
         void setMaterialName(char* matName);
         void setNodeVals(int dofIdx, int nodeIdx);
 
-        // Implemented, not tested
-        
-
-        
+        // Add some getters        
 
         // Implemented and tested
         void setElementNumber(int giveElementNumb);
@@ -59,15 +52,33 @@ class GeneralElement {
         void setNumberOfNodes(int thisManyNodes);
         int getNumberOfNodes();
         void checkNumbOfNodes(int givenVectSize);
-        void setNodeCoords(std::vector< std::vector< double > > nodeGlobCoords);
+        void setNodeCoordVect(std::vector< std::vector< double > > nodeGlobCoords);
         std::vector< std::vector< double > > getNodeCoords();
 
         // Generic placeholder for subclass  
-        void setLocNodeCoords();
-        void setShapeFuncs();
+        virtual void setLocNodeCoords() {};
+        virtual void setShapeFuncs() {};
+        virtual void setIsoThermCond(double thermCond) {};
+        virtual std::vector< std::vector< double > > getStiffnessMatrix(){
+            return std::vector< std::vector< double > >(0);
+        };
+        virtual std::vector< double > getTotalLoadVect(){
+            return std::vector< double >(0);
+        };
+        virtual void setSurfaceLoadInLocCoords(int surfNumb, OneDimPoly locLoadShape) {};
+        virtual void setNodeCoords(std::vector< std::vector< double > > nodeGlobCoords) {};
 };
 
-class XyLinearThermalMeloshElement : public GeneralElement{
+class TwoDimThermalElement : public ThermalElement {
+    
+    private:
+
+    public:
+        virtual void setElemThick(double elemThick) {};
+        virtual double getElemThick() {return 0.0;};
+};
+
+class XyLinearThermalMeloshElement : public TwoDimThermalElement{
 /*
   (x4,y4)      S3        (x3,y3)
      O----------|----------O
@@ -118,16 +129,12 @@ DOF:
 
         // Implemented not tested
         void setSurfaceLoadInLocCoords(int surfNumb, OneDimPoly locLoadShape);
+        std::vector<double> getLoadOnSurf(int surfNumb);
+        std::vector<double> getTotalLoadVect();
 
         // Not implemented
-        
-        
-        
-        std::vector<double> getLoadOnSurf(int surfNumb);
-        
         void setBodyLoad(TwoDimPoly loadShape);
         std::vector<double> getBodyLoadVect();
         
-        std::vector<double> getTotalLoadVect();
 };
 

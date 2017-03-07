@@ -1,33 +1,33 @@
 #include "elementClasses.h"
 
-GeneralElement::GeneralElement() {
+ThermalElement::ThermalElement() {
     numbOfNodes = 0;
 };
 
-void GeneralElement::setNumberOfNodes(int thisManyNodes) {
+void ThermalElement::setNumberOfNodes(int thisManyNodes) {
     numbOfNodes = thisManyNodes;
 };
 
-int GeneralElement::getNumberOfNodes() {
+int ThermalElement::getNumberOfNodes() {
     return numbOfNodes;
 };
 
-void GeneralElement::setElementNumber(int giveElementNumb) {
+void ThermalElement::setElementNumber(int giveElementNumb) {
     elementNumb = giveElementNumb;
 };
 
-int GeneralElement::getElementNumber() {
+int ThermalElement::getElementNumber() {
     return elementNumb;
 };
 
-void GeneralElement::checkNumbOfNodes(int givenVectSize) {
+void ThermalElement::checkNumbOfNodes(int givenVectSize) {
     if(givenVectSize != numbOfNodes) {
         //TODO: Make this a real exception
         throw "Wrong numbOfNodes";
     };
 };
 
-void GeneralElement::setNodeGlobNumber(std::vector< int > nodeGlobNumb) {
+void ThermalElement::setNodeGlobNumber(std::vector< int > nodeGlobNumb) {
     
     if (numbOfNodes == 0) {
         numbOfNodes = nodeGlobNumb.size(); 
@@ -39,11 +39,11 @@ void GeneralElement::setNodeGlobNumber(std::vector< int > nodeGlobNumb) {
     nodeGlobNumbVect = nodeGlobNumb;
 };
 
-std::vector< int > GeneralElement::getNodeGlobNumber() {
+std::vector< int > ThermalElement::getNodeGlobNumber() {
     return nodeGlobNumbVect;
 };
 
-void GeneralElement::setNodeCoords(std::vector< std::vector< double > > nodeGlobCoords) {
+void ThermalElement::setNodeCoordVect(std::vector< std::vector< double > > nodeGlobCoords) {
 
     if (numbOfNodes == 0) {
         numbOfNodes = nodeGlobCoords.size(); 
@@ -55,7 +55,7 @@ void GeneralElement::setNodeCoords(std::vector< std::vector< double > > nodeGlob
     nodeGlobCoordVect = nodeGlobCoords;
 };
 
-std::vector< std::vector< double > > GeneralElement::getNodeCoords() {
+std::vector< std::vector< double > > ThermalElement::getNodeCoords() {
     return nodeGlobCoordVect;
 };
 
@@ -153,10 +153,10 @@ double XyLinearThermalMeloshElement::getHalfHeight() {
 };
 
 void XyLinearThermalMeloshElement::setNodeCoords(std::vector< std::vector< double > > globalNodeCoords){
-    GeneralElement::setNodeCoords(globalNodeCoords);
+    ThermalElement::setNodeCoordVect(globalNodeCoords);
     checkNodeCoords();
     setLocNodeCoords();
-    //TODO: Maybe move call to setShapeFuncs here?
+    setShapeFuncs();
 };
 
 void XyLinearThermalMeloshElement::setElemThick(double elemThick) {
@@ -346,4 +346,21 @@ std::vector<double> XyLinearThermalMeloshElement::getLoadOnSurf(int surfNumb){
     }
 
     return surfLoadVect;
+};
+
+std::vector<double> XyLinearThermalMeloshElement::getTotalLoadVect() {
+
+    std::vector< double > totalLoad(this->numbOfNodes, 0.0);
+    std::vector< double > specSurfLoad;
+
+    for (int surfNumb = 1; surfNumb <= this->numbOfSurfs; surfNumb++) {
+        specSurfLoad = this->getLoadOnSurf(surfNumb);
+        for (int nodeIdx = 0; nodeIdx < this->numbOfNodes; nodeIdx++) {
+            totalLoad[nodeIdx] += specSurfLoad[nodeIdx];
+        };
+    };
+
+    // TODO: need to add body loads
+
+    return totalLoad;
 };
