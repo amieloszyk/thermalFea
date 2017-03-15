@@ -69,8 +69,6 @@ void slideOneElementMeshTest() {
     std::cout << "Calculated (in mesh) K-matrix:" << std::endl;
     printMatrix(globStiffMat);
 
-    // printMatrix(patchMesh.elementObjList[0]->nodeLocCoordVect);
-    
     // This is giving the right answer
     XyLinearThermalMeloshElement slideElement;
     slideElement.setNodeCoords(dummyNodeCoords);
@@ -79,9 +77,6 @@ void slideOneElementMeshTest() {
     std::vector< std::vector< double > > singleElementStiff = slideElement.getStiffnessMatrix();
     std::cout << "Calculated (single element) K-matrix:" << std::endl;
     printMatrix(singleElementStiff);
-
-    // printMatrix(slideElement.nodeLocCoordVect);
-
 
     std::cout << "Known K-matrix:" << std::endl;
     std::cout << "4.2813, 0.6587, -2.1407, -2.7993" << std::endl;

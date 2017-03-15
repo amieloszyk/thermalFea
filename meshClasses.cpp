@@ -28,7 +28,7 @@ void TwoDimMeshOfElements::addExistingElement(int elementNumb, TwoDimThermalElem
     //node tracking
     std::vector< std::vector< double > > newNodeCoords = element->getNodeCoords();
     for(int locNodeIdx = 0; locNodeIdx < globalNodeNumbs.size(); locNodeIdx++) {
-        this->nodeCoords[globalNodeNumbs[locNodeIdx]] = newNodeCoords[locNodeIdx];
+        this->nodeCoords[globalNodeNumbs[locNodeIdx]-1] = newNodeCoords[locNodeIdx];
     };
 
 };
