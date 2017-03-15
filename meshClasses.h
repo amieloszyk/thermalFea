@@ -18,24 +18,20 @@ class TwoDimMeshOfElements {
         int numbOfNodes;
         std::vector< std::vector< double > > nodeCoords;
         std::vector< double > nodeVals;
-        std::vector< bool > nodeVal;
+        std::vector< bool > nodeValSet;
 
         int numbOfSurfs;
         std::vector< std::vector< int > > surfElemNumbs;
         std::vector< std::vector< int > > surfLocNumbs;
-
-        // These need to be sized in constructor 
-        std::vector< bool > nodesWithSetVals;
-        std::vector< double > fixedNodeVals;
 
     public:
 
         //Note that some of these should be in the parent class
 
         // Unimplemented and untested
-        void setFixedNodeVals(std::vector< int > nodesToSet, std::vector< double > setVals);
         void setSurfaceFixedVals(int globSurfNumb, double nodeVal); // allow polynomials too
-        void getMatsToSolve();  // augmented stiffness matrix and load vector
+        std::vector< std::vector< double > > getStiffMatToSolve();
+        std::vector< double > getLoadVectToSolve();
         // std::vector< double > solveNodeVals(); -> remove
         void checkNumbOfNodes();
         void checkNumbOfElements();
@@ -48,7 +44,8 @@ class TwoDimMeshOfElements {
         void addLocSurfToMesh(int meshSurfNumb, int meshElementNumb, int locSurfNumb);
         void addLocCoordLoadToSurf(int globSurfNumb, OneDimPoly locCoordPoly);
         void setScalarSurfFlux(int globSurfNumb, double scalarFlux);
-        std::vector< std::vector< double > > getGlobStiffMatrix();
-        std::vector< double > getGlobLoadVect();
+        std::vector< std::vector< double > > getRawGlobStiffMatrix();
+        std::vector< double > getRawGlobLoadVect();
+        void setFixedNodeVals(std::vector< int > nodesToSet, std::vector< double > setVals);
 
 };

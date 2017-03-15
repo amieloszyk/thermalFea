@@ -6,7 +6,8 @@ TwoDimMeshOfElements::TwoDimMeshOfElements(int nodesInMesh, int elementsInMesh) 
 
     this->numbOfNodes = nodesInMesh;
     this->nodeCoords.resize(nodesInMesh);
-    this->nodeVals.resize(nodesInMesh,0);
+    this->nodeVals.resize(nodesInMesh,0.0);
+    this->nodeValSet.resize(nodesInMesh,false);
 
     this->numbOfElements = elementsInMesh;
     this->elementObjList.resize(elementsInMesh);
@@ -70,7 +71,7 @@ void TwoDimMeshOfElements::setScalarSurfFlux(int globSurfNumb, double scalarFlux
 
 };
 
-std::vector< std::vector< double > > TwoDimMeshOfElements::getGlobStiffMatrix() {
+std::vector< std::vector< double > > TwoDimMeshOfElements::getRawGlobStiffMatrix() {
     
     std::vector< std::vector< double > > globStiff(this->numbOfNodes, std::vector< double >(this->numbOfNodes, 0.0));
     std::vector< std::vector< double > > locStiff;
@@ -98,7 +99,7 @@ std::vector< std::vector< double > > TwoDimMeshOfElements::getGlobStiffMatrix() 
     return globStiff;
 };
 
-std::vector< double > TwoDimMeshOfElements::getGlobLoadVect() {
+std::vector< double > TwoDimMeshOfElements::getRawGlobLoadVect() {
     std::vector< double > globLoad(this->numbOfNodes, 0.0);
     std::vector< double > locLoads;
     std::vector< int > globNodeNumbs;
@@ -123,11 +124,49 @@ std::vector< double > TwoDimMeshOfElements::getGlobLoadVect() {
 void TwoDimMeshOfElements::setFixedNodeVals(std::vector< int > nodesToSet, std::vector< double > setVals) {
 
     int nodeIdx = 0;
-    for (int setIdx = 0; nodeIdx < nodesToSet.size(); nodeIdx++) {
+    for (int setIdx = 0; setIdx < nodesToSet.size(); setIdx++) {
         nodeIdx = nodesToSet[setIdx]-1;
-        // more to come
-
+        this->nodeValSet[nodeIdx] = true;
+        this->nodeVals[nodeIdx] = setVals[setIdx];
     };
 
+};
+
+std::vector< std::vector< double > > TwoDimMeshOfElements::getStiffMatToSolve() {
+    
+    std::vector< std::vector< double > > rawStiff = this->getRawGlobStiffMatrix();
+    std::vector< std::vector< double > > solveStiff;
+    std::vector< double > dummyRow(rawStiff[0].size(),0.0);
+
+    for (int rowIdx=0; rowIdx < this->numbOfNodes; rowIdx++) {
+        if (this->nodeValSet[rowIdx]) {
+            std::fill(dummyRow.begin(), dummyRow.end(), 0.0);
+            dummyRow[rowIdx] = 1.0;
+        }
+        else {
+            dummyRow = rawStiff[rowIdx];
+        };
+        solveStiff.push_back(dummyRow);
+    };
+    
+    return solveStiff;
+};
+
+std::vector< double > TwoDimMeshOfElements::getLoadVectToSolve() {
+    std::vector< double > rawLoad = this->getRawGlobLoadVect();
+    std::vector< double > solveLoad;
+    double dummy = 0.0;
+
+    for (int rowIdx=0; rowIdx < this->numbOfNodes; rowIdx++) {
+        if (this->nodeValSet[rowIdx]) {
+            dummy = this->nodeVals[rowIdx];
+        }
+        else {
+            dummy = rawLoad[rowIdx];
+        };
+        solveLoad.push_back(dummy);
+    };
+
+    return solveLoad;
 };
 
