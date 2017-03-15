@@ -58,6 +58,7 @@ class ThermalElement {
         // Generic placeholder for subclass  
         virtual void setLocNodeCoords() {};
         virtual void setShapeFuncs() {};
+        virtual void setMatMatrix(std::vector< std::vector< double > > thermCondMatrix) {};
         virtual void setIsoThermCond(double thermCond) {};
         virtual std::vector< std::vector< double > > getStiffnessMatrix(){
             return std::vector< std::vector< double > >(0);

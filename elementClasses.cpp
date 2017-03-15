@@ -1,27 +1,27 @@
 #include "elementClasses.h"
 
 ThermalElement::ThermalElement() {
-    numbOfNodes = 0;
+    this->numbOfNodes = 0;
 };
 
 void ThermalElement::setNumberOfNodes(int thisManyNodes) {
-    numbOfNodes = thisManyNodes;
+    this->numbOfNodes = thisManyNodes;
 };
 
 int ThermalElement::getNumberOfNodes() {
-    return numbOfNodes;
+    return this->numbOfNodes;
 };
 
 void ThermalElement::setElementNumber(int giveElementNumb) {
-    elementNumb = giveElementNumb;
+    this->elementNumb = giveElementNumb;
 };
 
 int ThermalElement::getElementNumber() {
-    return elementNumb;
+    return this->elementNumb;
 };
 
 void ThermalElement::checkNumbOfNodes(int givenVectSize) {
-    if(givenVectSize != numbOfNodes) {
+    if(givenVectSize != this->numbOfNodes) {
         //TODO: Make this a real exception
         throw "Wrong numbOfNodes";
     };
@@ -29,34 +29,34 @@ void ThermalElement::checkNumbOfNodes(int givenVectSize) {
 
 void ThermalElement::setNodeGlobNumber(std::vector< int > nodeGlobNumb) {
     
-    if (numbOfNodes == 0) {
-        numbOfNodes = nodeGlobNumb.size(); 
+    if (this->numbOfNodes == 0) {
+        this->numbOfNodes = nodeGlobNumb.size(); 
     }
     else {
         checkNumbOfNodes(nodeGlobNumb.size());
     };
     
-    nodeGlobNumbVect = nodeGlobNumb;
+    this->nodeGlobNumbVect = nodeGlobNumb;
 };
 
 std::vector< int > ThermalElement::getNodeGlobNumber() {
-    return nodeGlobNumbVect;
+    return this->nodeGlobNumbVect;
 };
 
 void ThermalElement::setNodeCoordVect(std::vector< std::vector< double > > nodeGlobCoords) {
 
     if (numbOfNodes == 0) {
-        numbOfNodes = nodeGlobCoords.size(); 
+        this->numbOfNodes = nodeGlobCoords.size(); 
     }
     else {
         checkNumbOfNodes(nodeGlobCoords.size());
     };
 
-    nodeGlobCoordVect = nodeGlobCoords;
+    this->nodeGlobCoordVect = nodeGlobCoords;
 };
 
 std::vector< std::vector< double > > ThermalElement::getNodeCoords() {
-    return nodeGlobCoordVect;
+    return this->nodeGlobCoordVect;
 };
 
 
@@ -76,44 +76,44 @@ std::vector< std::vector< double > > ThermalElement::getNodeCoords() {
 XyLinearThermalMeloshElement::XyLinearThermalMeloshElement() 
 :condMatrix (2,std::vector< double >(2,0.0) )
 {
-    numbOfNodes = 4;
-    numbOfSurfs = numbOfNodes;
-    degreesOfFreedom = 1;
-    halfHeight = 0.0;
-    halfWidth = 0.0;
-    loadOnSurf[0] = false;
-    loadOnSurf[1] = false;
-    loadOnSurf[2] = false;
-    loadOnSurf[3] = false;
-    loadOnBody = false;
+    this->numbOfNodes = 4;
+    this->numbOfSurfs = numbOfNodes;
+    this->degreesOfFreedom = 1;
+    this->halfHeight = 0.0;
+    this->halfWidth = 0.0;
+    this->loadOnSurf[0] = false;
+    this->loadOnSurf[1] = false;
+    this->loadOnSurf[2] = false;
+    this->loadOnSurf[3] = false;
+    this->loadOnBody = false;
     
     std::vector<double> zeroCoeff;
     zeroCoeff.push_back(0.0);
     for(int idx = 0; idx < numbOfSurfs; ++idx) {
-        locSurfLoads.push_back(zeroCoeff);
+        this->locSurfLoads.push_back(zeroCoeff);
     };
 };
 
 void XyLinearThermalMeloshElement::checkNodeCoords() {
 
-    if (nodeGlobCoordVect[0].size() != 2) {
+    if (this->nodeGlobCoordVect[0].size() != 2) {
         //TODO: Make this a real exception
         throw "Node coordinates must be 2-D";
     }
 
-    if (nodeGlobCoordVect[0][0] != nodeGlobCoordVect[3][0]) {
+    if (this->nodeGlobCoordVect[0][0] != nodeGlobCoordVect[3][0]) {
         //TODO: Make this a real exception
         throw "Melosh elements must be rectangular";
     }
-    else if (nodeGlobCoordVect[1][0] != nodeGlobCoordVect[2][0]) {
+    else if (this->nodeGlobCoordVect[1][0] != nodeGlobCoordVect[2][0]) {
         //TODO: Make this a real exception
         throw "Melosh elements must be rectangular";
     }
-    else if (nodeGlobCoordVect[0][1] != nodeGlobCoordVect[1][1]) {
+    else if (this->nodeGlobCoordVect[0][1] != nodeGlobCoordVect[1][1]) {
         //TODO: Make this a real exception
         throw "Melosh elements must be rectangular";
     }
-    else if (nodeGlobCoordVect[2][1] != nodeGlobCoordVect[3][1]) {
+    else if (this->nodeGlobCoordVect[2][1] != nodeGlobCoordVect[3][1]) {
         //TODO: Make this a real exception
         throw "Melosh elements must be rectangular";
     };
@@ -121,54 +121,54 @@ void XyLinearThermalMeloshElement::checkNodeCoords() {
 
 void XyLinearThermalMeloshElement::setLocNodeCoords() {
     
-    halfWidth = (nodeGlobCoordVect[1][0] - nodeGlobCoordVect[0][0])/2.0;
-    halfHeight = (nodeGlobCoordVect[3][1] - nodeGlobCoordVect[0][1])/2.0;
+    this->halfWidth = (this->nodeGlobCoordVect[1][0] - this->nodeGlobCoordVect[0][0])/2.0;
+    this->halfHeight = (this->nodeGlobCoordVect[3][1] - this->nodeGlobCoordVect[0][1])/2.0;
 
     std::vector< double > coordVect(2);
     coordVect[0] = -halfWidth;
     coordVect[1] = -halfHeight;
-    nodeLocCoordVect.push_back(coordVect);
+    this->nodeLocCoordVect.push_back(coordVect);
     coordVect[0] = halfWidth;
     coordVect[1] = -halfHeight;
-    nodeLocCoordVect.push_back(coordVect);
+    this->nodeLocCoordVect.push_back(coordVect);
     coordVect[0] = halfWidth;
     coordVect[1] = halfHeight;
-    nodeLocCoordVect.push_back(coordVect);
+    this->nodeLocCoordVect.push_back(coordVect);
     coordVect[0] = -halfWidth;
     coordVect[1] = halfHeight;
-    nodeLocCoordVect.push_back(coordVect);
+    this->nodeLocCoordVect.push_back(coordVect);
 
 };
 
 std::vector< std::vector< double > > XyLinearThermalMeloshElement::getLocNodeCoords() {
-    return nodeLocCoordVect;
+    return this->nodeLocCoordVect;
 };
 
 double XyLinearThermalMeloshElement::getHalfWidth() {
-    return halfWidth;
+    return this->halfWidth;
 };
 
 double XyLinearThermalMeloshElement::getHalfHeight() {
-    return halfHeight;
+    return this->halfHeight;
 };
 
 void XyLinearThermalMeloshElement::setNodeCoords(std::vector< std::vector< double > > globalNodeCoords){
     ThermalElement::setNodeCoordVect(globalNodeCoords);
-    checkNodeCoords();
-    setLocNodeCoords();
-    setShapeFuncs();
+    this->checkNodeCoords();
+    this->setLocNodeCoords();
+    this->setShapeFuncs();
 };
 
 void XyLinearThermalMeloshElement::setElemThick(double elemThick) {
     // This should be moved to a more generic 2-D class
 
-    elemThickness = elemThick;
+    this->elemThickness = elemThick;
 };
 
 double XyLinearThermalMeloshElement::getElemThick() {
     // This should be moved to a more generic 2-D class
 
-    return elemThickness;
+    return this->elemThickness;
 };
 
 
@@ -182,73 +182,73 @@ void XyLinearThermalMeloshElement::setMatMatrix(std::vector< std::vector< double
         throw "Thermal conductivity matrix must be 2x2";
     };
 
-    condMatrix = thermCondMatrix;
+    this->condMatrix = thermCondMatrix;
 };
 
 std::vector< std::vector< double > > XyLinearThermalMeloshElement::getMatMatrix() {
-    return condMatrix;
+    return this->condMatrix;
 };
 
 void XyLinearThermalMeloshElement::setIsoThermCond(double thermCond) {
-    condMatrix[0][0] = thermCond;
-    condMatrix[0][1] = 0.0;
-    condMatrix[1][0] = 0.0;
-    condMatrix[1][1] = thermCond;
+    this->condMatrix[0][0] = thermCond;
+    this->condMatrix[0][1] = 0.0;
+    this->condMatrix[1][0] = 0.0;
+    this->condMatrix[1][1] = thermCond;
 };
 
 void XyLinearThermalMeloshElement::setShapeFuncs() {
-    if (halfWidth == 0.0) {
+    if (this->halfWidth == 0.0) {
         //TODO: Make this a real exception
         throw "Element size not set";
     }
-    else if (halfWidth == 0.0) {
+    else if (this->halfWidth == 0.0) {
         //TODO: Make this a real exception
         throw "Element size not set";
     };
     
-    double denomMult = 1.0/(4.0*halfWidth*halfHeight);
+    double denomMult = 1.0/(4.0*this->halfWidth*this->halfHeight);
     std::vector< double > oneDimCoeffVect(2);
     std::vector< OneDimPoly > oneDimPolyVect;
     std::vector< TwoDimPoly > polyRow;
 
     // Shape #1: -,-
-    oneDimCoeffVect[0] = halfWidth;
+    oneDimCoeffVect[0] = this->halfWidth;
     oneDimCoeffVect[1] = -1.0;
     OneDimPoly dummyOneDimPoly1(oneDimCoeffVect);  //TODO: This should get redefined for each shape function
-    oneDimPolyVect.push_back(dummyOneDimPoly1.multScalar(halfHeight*denomMult));
+    oneDimPolyVect.push_back(dummyOneDimPoly1.multScalar(this->halfHeight*denomMult));
     oneDimPolyVect.push_back(dummyOneDimPoly1.multScalar(-denomMult));
     polyRow.push_back(TwoDimPoly(oneDimPolyVect));
 
     // Shape #2: +,-
-    oneDimCoeffVect[0] = halfWidth;
+    oneDimCoeffVect[0] = this->halfWidth;
     oneDimCoeffVect[1] = 1.0;
     OneDimPoly dummyOneDimPoly2(oneDimCoeffVect); //TODO: This should get redefined for each shape function
-    oneDimPolyVect[0] = dummyOneDimPoly2.multScalar(halfHeight*denomMult);
+    oneDimPolyVect[0] = dummyOneDimPoly2.multScalar(this->halfHeight*denomMult);
     oneDimPolyVect[1] = dummyOneDimPoly2.multScalar(-denomMult);
     polyRow.push_back(TwoDimPoly(oneDimPolyVect));
 
     // Shape #3: +,+
-    oneDimCoeffVect[0] = halfWidth;
+    oneDimCoeffVect[0] = this->halfWidth;
     oneDimCoeffVect[1] = 1.0;
     OneDimPoly dummyOneDimPoly3(oneDimCoeffVect); //TODO: This should get redefined for each shape function
-    oneDimPolyVect[0] = dummyOneDimPoly3.multScalar(halfHeight*denomMult);
+    oneDimPolyVect[0] = dummyOneDimPoly3.multScalar(this->halfHeight*denomMult);
     oneDimPolyVect[1] = dummyOneDimPoly3.multScalar(denomMult);
     polyRow.push_back(TwoDimPoly(oneDimPolyVect));
 
     // Shape #4: -,+
-    oneDimCoeffVect[0] = halfWidth;
+    oneDimCoeffVect[0] = this->halfWidth;
     oneDimCoeffVect[1] = -1.0;
     OneDimPoly dummyOneDimPoly4(oneDimCoeffVect); //TODO: This should get redefined for each shape function
-    oneDimPolyVect[0] = dummyOneDimPoly4.multScalar(halfHeight*denomMult);
+    oneDimPolyVect[0] = dummyOneDimPoly4.multScalar(this->halfHeight*denomMult);
     oneDimPolyVect[1] = dummyOneDimPoly4.multScalar(denomMult);
     polyRow.push_back(TwoDimPoly(oneDimPolyVect));
 
-    shapeFuncVect.addRow(polyRow);
+    this->shapeFuncVect.addRow(polyRow);
 
 };
 
 XyShapeFuncVector XyLinearThermalMeloshElement::getShapeFuncs() {
-    return shapeFuncVect;
+    return this->shapeFuncVect;
 };
 
 PolyArray XyLinearThermalMeloshElement::getStiffIntegrand() {
@@ -257,8 +257,8 @@ PolyArray XyLinearThermalMeloshElement::getStiffIntegrand() {
     PolyArray gradShapeFuncs = shapeFuncVect.getGrad();
     
     PolyArray stiffIntegrand = gradShapeFuncs.transpose();
-    stiffIntegrand = stiffIntegrand.multScalar(elemThickness);
-    stiffIntegrand = stiffIntegrand.matMultScalarBehind(condMatrix);
+    stiffIntegrand = stiffIntegrand.multScalar(this->elemThickness);
+    stiffIntegrand = stiffIntegrand.matMultScalarBehind(this->condMatrix);
     stiffIntegrand = stiffIntegrand.matMultPolyArray(gradShapeFuncs);
 
     return stiffIntegrand;
@@ -267,9 +267,9 @@ PolyArray XyLinearThermalMeloshElement::getStiffIntegrand() {
 
 std::vector< std::vector< double > > XyLinearThermalMeloshElement::getStiffnessMatrix() {
     
-    PolyArray stiffIntegrand = getStiffIntegrand();
-    std::vector< std::vector< double > > stiffMatrix = stiffIntegrand.findIntegralOverRange(nodeLocCoordVect[0][0],nodeLocCoordVect[1][0],
-                                                                                            nodeLocCoordVect[0][1],nodeLocCoordVect[3][1]);
+    PolyArray stiffIntegrand = this->getStiffIntegrand();
+    std::vector< std::vector< double > > stiffMatrix = stiffIntegrand.findIntegralOverRange(this->nodeLocCoordVect[0][0],this->nodeLocCoordVect[1][0],
+                                                                                            this->nodeLocCoordVect[0][1],this->nodeLocCoordVect[3][1]);
     return stiffMatrix;
 };
 
@@ -280,21 +280,18 @@ void XyLinearThermalMeloshElement::setSurfaceLoadInLocCoords(int surfNumb, OneDi
     */
 
     int surfIdx = surfNumb - 1;
-    loadOnSurf[surfIdx] = true;
-    locSurfLoads[surfIdx].multScalar(0.0);
-    locSurfLoads[surfIdx] = locSurfLoads[surfIdx].addOneDimPoly(locLoadShape);
+    this->loadOnSurf[surfIdx] = true;
+    this->locSurfLoads[surfIdx].multScalar(0.0);
+    this->locSurfLoads[surfIdx] = this->locSurfLoads[surfIdx].addOneDimPoly(locLoadShape);
 };
 
 std::vector<double> XyLinearThermalMeloshElement::getLoadOnSurf(int surfNumb){
     
     int surfIdx = surfNumb - 1;
 
-    std::vector<double> surfLoadVect;
-    for(int idx = 0; idx < numbOfNodes; ++idx) {
-        surfLoadVect.push_back(0.0);
-    };
+    std::vector<double> surfLoadVect(this->numbOfNodes,0.0);
 
-    if (loadOnSurf[surfIdx]) {
+    if (this->loadOnSurf[surfIdx]) {
         
         OneDimPoly surfFuncIntShapeFuncs(std::vector<double>(1,0.0)); // Appropriate shape functions for integrating surface loads
         OneDimPoly tempOneDimPoly(std::vector<double>(1,0.0));
@@ -303,38 +300,38 @@ std::vector<double> XyLinearThermalMeloshElement::getLoadOnSurf(int surfNumb){
         double fixedY;
         double lowerIntBound;
         double upperIntBound;
-        PolyArray transShapeFuncs = shapeFuncVect.transpose();
+        PolyArray transShapeFuncs = this->shapeFuncVect.transpose();
         
-        for (int shapeIdx = 0; shapeIdx < numbOfNodes; ++shapeIdx) {
+        for (int shapeIdx = 0; shapeIdx < this->numbOfNodes; ++shapeIdx) {
             
             TwoDimPoly tempTwoDimPoly = transShapeFuncs.getPoly(shapeIdx, 0);
             
             if (surfNumb == 1){
                 // Bottom surface
-                fixedY = -halfHeight;
-                lowerIntBound = -halfWidth;
-                upperIntBound = halfWidth;
+                fixedY = -this->halfHeight;
+                lowerIntBound = -this->halfWidth;
+                upperIntBound = this->halfWidth;
                 tempOneDimPoly = tempTwoDimPoly.getFixedVarTwoPoly(fixedY);
             }
             else if (surfNumb == 2){
                 // Right surface
-                fixedX = halfWidth;
-                lowerIntBound = -halfHeight;
-                upperIntBound = halfHeight;
+                fixedX = this->halfWidth;
+                lowerIntBound = -this->halfHeight;
+                upperIntBound = this->halfHeight;
                 tempOneDimPoly = tempTwoDimPoly.getFixedVarOnePoly(fixedX);
             }
             else if (surfNumb == 3){
                 // Top surface
-                fixedY = halfHeight;
-                lowerIntBound = -halfWidth;
-                upperIntBound = halfWidth;
+                fixedY = this->halfHeight;
+                lowerIntBound = -this->halfWidth;
+                upperIntBound = this->halfWidth;
                 tempOneDimPoly = tempTwoDimPoly.getFixedVarTwoPoly(fixedY);
             }
             else if (surfNumb == 4){
                 // Left surface
-                fixedX = -halfWidth;
-                lowerIntBound = -halfHeight;
-                upperIntBound = halfHeight;
+                fixedX = -this->halfWidth;
+                lowerIntBound = -this->halfHeight;
+                upperIntBound = this->halfHeight;
                 tempOneDimPoly = tempTwoDimPoly.getFixedVarOnePoly(fixedX);
             }
 

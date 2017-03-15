@@ -252,7 +252,7 @@ void testXyLinearThermalMeloshElement() {
 };
 
 
-int main() {
+void testElementMain() {
     testGeneralElements();
     testXyLinearThermalMeloshElement();
 };

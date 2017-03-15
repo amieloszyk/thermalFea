@@ -24,15 +24,17 @@ class TwoDimMeshOfElements {
         std::vector< std::vector< int > > surfElemNumbs;
         std::vector< std::vector< int > > surfLocNumbs;
 
+        // These need to be sized in constructor 
         std::vector< bool > nodesWithSetVals;
-        std::double
+        std::vector< double > fixedNodeVals;
 
     public:
 
         //Note that some of these should be in the parent class
 
         // Unimplemented and untested
-        void setNodeVals(std::vector< int > nodesToSet, std::vector< double > setVals);
+        void setFixedNodeVals(std::vector< int > nodesToSet, std::vector< double > setVals);
+        void setSurfaceFixedVals(int globSurfNumb, double nodeVal); // allow polynomials too
         void getMatsToSolve();  // augmented stiffness matrix and load vector
         // std::vector< double > solveNodeVals(); -> remove
         void checkNumbOfNodes();

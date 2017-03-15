@@ -28,6 +28,70 @@ void printMatrix(std::vector< double >  matrixToPrint) {
     std::cout << std::endl;
 };
 
+void slideOneElementMeshTest() {
+
+    std::vector< double > dummyCoord(2);
+    std::vector< std::vector< double > > dummyNodeCoords;
+    dummyCoord[0] = 0.0;
+    dummyCoord[1] = 0.0;
+    dummyNodeCoords.push_back(dummyCoord);
+    dummyCoord[0] = 2.0;
+    dummyCoord[1] = 0.0;
+    dummyNodeCoords.push_back(dummyCoord);
+    dummyCoord[0] = 2.0;
+    dummyCoord[1] = 1.0;
+    dummyNodeCoords.push_back(dummyCoord);
+    dummyCoord[0] = 0.0;
+    dummyCoord[1] = 1.0;
+    dummyNodeCoords.push_back(dummyCoord);
+
+    std::vector< std::vector< double > > condMatrix(2, std::vector<double>(2,0.0));
+    condMatrix[0][0] = 4.56;
+    condMatrix[1][1] = 3.8;
+    
+    //XyLinearThermalMeloshElement elementOne;
+    TwoDimThermalElement *elementOne = new XyLinearThermalMeloshElement();
+    elementOne->setNodeCoords(dummyNodeCoords);
+    elementOne->setMatMatrix(condMatrix);
+    elementOne->setElemThick(1.3);
+
+    std::vector< int > dummyGlobElementMap(4);
+    dummyGlobElementMap[0] = 1;
+    dummyGlobElementMap[1] = 2;
+    dummyGlobElementMap[2] = 3;
+    dummyGlobElementMap[3] = 4;
+
+    TwoDimMeshOfElements patchMesh(4, 1);
+    patchMesh.addExistingElement(1, elementOne, dummyGlobElementMap);
+
+    // This is not giving the right answer because the first node location is stored incorrectly in the mesh
+    std::vector< std::vector< double > > globStiffMat = patchMesh.getGlobStiffMatrix();
+    std::cout << "Calculated (in mesh) K-matrix:" << std::endl;
+    printMatrix(globStiffMat);
+
+    // printMatrix(patchMesh.elementObjList[0]->nodeLocCoordVect);
+    
+    // This is giving the right answer
+    XyLinearThermalMeloshElement slideElement;
+    slideElement.setNodeCoords(dummyNodeCoords);
+    slideElement.setMatMatrix(condMatrix);
+    slideElement.setElemThick(1.3);
+    std::vector< std::vector< double > > singleElementStiff = slideElement.getStiffnessMatrix();
+    std::cout << "Calculated (single element) K-matrix:" << std::endl;
+    printMatrix(singleElementStiff);
+
+    // printMatrix(slideElement.nodeLocCoordVect);
+
+
+    std::cout << "Known K-matrix:" << std::endl;
+    std::cout << "4.2813, 0.6587, -2.1407, -2.7993" << std::endl;
+    std::cout << "0.6587, 4.2813, -2.7993, -2.1407" << std::endl;
+    std::cout << "-2.1407, -2.7993, 4.2813, 0.6587" << std::endl;
+    std::cout << "-2.7993, -2.1407, 0.6587, 4.2813" << std::endl;
+    std::cout << std::endl;
+
+};
+
 void oneElementMeshTest() {
 
     std::vector< double > dummyCoord(2);
@@ -71,10 +135,8 @@ void oneElementMeshTest() {
     std::vector< std::vector< double > > globStiffMat = patchMesh.getGlobStiffMatrix();
     std::vector< double > globLoadVect = patchMesh.getGlobLoadVect();
 
-
     printMatrix(globStiffMat);
     printMatrix(globLoadVect);
-
 
 };
 
@@ -250,6 +312,6 @@ void nineElementMeshTest() {
 
 
 void patchMain() {
-
+    slideOneElementMeshTest();
     oneElementMeshTest();
 };

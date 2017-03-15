@@ -112,16 +112,22 @@ std::vector< double > TwoDimMeshOfElements::getGlobLoadVect() {
         for (int locRowIdx=0; locRowIdx < numbLocNodes; locRowIdx++) {
             int globRowIdx = globNodeNumbs[locRowIdx]-1;
 
-    //         for (int locColIdx=0; locColIdx < numbLocNodes; locColIdx++) {
-    //             int globColIdx = globNodeNumbs[locColIdx]-1;
 
             globLoad[globRowIdx] += locLoads[locRowIdx];
-    //         };
         };
-    //     locLoad.clear();
-    //     globNodeNumbs.clear();
     };
     
     return locLoads;
+};
+
+void TwoDimMeshOfElements::setFixedNodeVals(std::vector< int > nodesToSet, std::vector< double > setVals) {
+
+    int nodeIdx = 0;
+    for (int setIdx = 0; nodeIdx < nodesToSet.size(); nodeIdx++) {
+        nodeIdx = nodesToSet[setIdx]-1;
+        // more to come
+
+    };
+
 };
 
