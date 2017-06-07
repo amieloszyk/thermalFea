@@ -7,8 +7,10 @@ width of 3
 #include <iostream>
 #include <vector>
 #include "meshClasses.cpp"
+#include "solverClasses.cpp"
 
 void printMatrix(std::vector< std::vector< double > > matrixToPrint) { 
+    // TODO: Move this to a more generally accesssible location
 
     for (int rowIdx=0; rowIdx < matrixToPrint.size(); rowIdx++) {
         for (int colIdx=0; colIdx < matrixToPrint[rowIdx].size(); colIdx++) {
@@ -20,6 +22,7 @@ void printMatrix(std::vector< std::vector< double > > matrixToPrint) {
 };
 
 void printMatrix(std::vector< double >  matrixToPrint) { 
+    // TODO: Move this to a more generally accesssible location
 
     for (int rowIdx=0; rowIdx < matrixToPrint.size(); rowIdx++) {
         std::cout << matrixToPrint[rowIdx];
@@ -63,6 +66,7 @@ void slideOneElementMeshTest() {
 
     TwoDimMeshOfElements patchMesh(4, 1);
     patchMesh.addExistingElement(1, elementOne, dummyGlobElementMap);
+    // TODO: There should also be a method to add a new element
 
     // This is not giving the right answer because the first node location is stored incorrectly in the mesh
     std::vector< std::vector< double > > globStiffMat = patchMesh.getRawGlobStiffMatrix();
@@ -116,15 +120,17 @@ void oneElementMeshTest() {
     dummyGlobElementMap[2] = 3;
     dummyGlobElementMap[3] = 4;
 
+    // TODO: There should also be an internal method to add a new element
     TwoDimMeshOfElements patchMesh(4, 1);
     patchMesh.addExistingElement(1, elementOne, dummyGlobElementMap);
 
+    // TODO: There should also be an internal method to add a new surface
     int surfOneId = patchMesh.makeNewSurf();
     patchMesh.addLocSurfToMesh(surfOneId, 1, 2);
     patchMesh.setScalarSurfFlux(surfOneId, -1000.0);
 
     int surfTwoId = patchMesh.makeNewSurf();
-    patchMesh.addLocSurfToMesh(surfTwoId, 1, 3);
+    patchMesh.addLocSurfToMesh(surfTwoId, 1, 4);
     patchMesh.setScalarSurfFlux(surfTwoId, 1000.0);
     
     std::vector< std::vector< double > > rawStiffMat = patchMesh.getRawGlobStiffMatrix();
@@ -139,13 +145,17 @@ void oneElementMeshTest() {
     std::vector< double > setNodeVal(1,100.0);
     patchMesh.setFixedNodeVals(nodeWithSetVal, setNodeVal);
 
+    // TODO: These steps should be integrated into an internal method
     std::vector< std::vector< double > > solveStiffMat = patchMesh.getStiffMatToSolve();
     std::vector< double > solveLoadVect = patchMesh.getLoadVectToSolve();
+    std::vector< double > calcNodeTemps = gaussianElimSolve(solveStiffMat,solveLoadVect);
     
     std::cout << "Solvable K-Matrix:" << std::endl;
     printMatrix(solveStiffMat);
     std::cout << "Solvable Load Vector:" << std::endl;
     printMatrix(solveLoadVect);
+    std::cout << "Calculated Node Values:" << std::endl;
+    printMatrix(calcNodeTemps);
 
 };
 
