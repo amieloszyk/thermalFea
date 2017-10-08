@@ -12,22 +12,28 @@ width of 3
 void printMatrix(std::vector< std::vector< double > > matrixToPrint) { 
     // TODO: Move this to a more generally accesssible location
 
+    std::cout << "["  << std::endl;
     for (int rowIdx=0; rowIdx < matrixToPrint.size(); rowIdx++) {
+        std::cout << "[";
         for (int colIdx=0; colIdx < matrixToPrint[rowIdx].size(); colIdx++) {
             std::cout << matrixToPrint[rowIdx][colIdx] << ", ";
         };
+        std::cout << "],";
         std::cout << std::endl;
     };
+    std::cout << "]";
     std::cout << std::endl;
 };
 
 void printMatrix(std::vector< double >  matrixToPrint) { 
     // TODO: Move this to a more generally accesssible location
 
+    std::cout << "[";
     for (int rowIdx=0; rowIdx < matrixToPrint.size(); rowIdx++) {
-        std::cout << matrixToPrint[rowIdx];
+        std::cout << matrixToPrint[rowIdx] << ", ";
         std::cout << std::endl;
     };
+    std::cout << "]";
     std::cout << std::endl;
 };
 
@@ -93,26 +99,33 @@ void slideOneElementMeshTest() {
 
 void oneElementMeshTest() {
 
+    double xStart = 0.0;
+    double xEnd = 1.0;
+    double yStart = 0.0;
+    double yEnd = 1.0;
+    double thick = 1.0;
+    double isoThermCond = 10.0;
+
     std::vector< double > dummyCoord(2);
     std::vector< std::vector< double > > dummyNodeCoords;
-    dummyCoord[0] = 0.0;
-    dummyCoord[1] = 0.0;
+    dummyCoord[0] = xStart;
+    dummyCoord[1] = yStart;
     dummyNodeCoords.push_back(dummyCoord);
-    dummyCoord[0] = 3.0;
-    dummyCoord[1] = 0.0;
+    dummyCoord[0] = xEnd;
+    dummyCoord[1] = yStart;
     dummyNodeCoords.push_back(dummyCoord);
-    dummyCoord[0] = 3.0;
-    dummyCoord[1] = 1.0;
+    dummyCoord[0] = xEnd;
+    dummyCoord[1] = yEnd;
     dummyNodeCoords.push_back(dummyCoord);
-    dummyCoord[0] = 0.0;
-    dummyCoord[1] = 1.0;
+    dummyCoord[0] = xStart;
+    dummyCoord[1] = yEnd;
     dummyNodeCoords.push_back(dummyCoord);
 
     //XyLinearThermalMeloshElement elementOne;
     TwoDimThermalElement *elementOne = new XyLinearThermalMeloshElement();
     elementOne->setNodeCoords(dummyNodeCoords);
-    elementOne->setIsoThermCond(10.0);
-    elementOne->setElemThick(1.0);
+    elementOne->setIsoThermCond(isoThermCond);
+    elementOne->setElemThick(thick);
 
     std::vector< int > dummyGlobElementMap(4);
     dummyGlobElementMap[0] = 1;
@@ -120,7 +133,6 @@ void oneElementMeshTest() {
     dummyGlobElementMap[2] = 3;
     dummyGlobElementMap[3] = 4;
 
-    // TODO: There should also be an internal method to add a new element
     TwoDimMeshOfElements patchMesh(4, 1);
     patchMesh.addExistingElement(1, elementOne, dummyGlobElementMap);
 
@@ -159,7 +171,113 @@ void oneElementMeshTest() {
 
 };
 
-void threeElementMeshTest() {};
+void threeElementMeshTest() {
+    
+/*
+      5           6           7           8
+100K  +-----------+-----------+-----------+
+      |           |           |           |<-
+      |           |           |           |<-
+      |     1     |     2     |     3     |<- 1000 W/m2
+      | k=10W/m-K | k=10W/m-K | k=10W/m-K |<-
+      |           |           |           |<-
+      +-----------+-----------+-----------+
+      1           2           3           4
+
+*/
+
+    double xStart = 0.0;
+    double xEnd = 3.0;
+    double yStart = 0.0;
+    double yEnd = 1.0;
+    int numbElemX = 3;
+    int numbElemY = 1;
+    double xStep = (xEnd-xStart)/double(numbElemX);
+    double yStep = (yEnd-yStart)/double(numbElemY);
+    double thick = 1.0;
+    double isoThermCond = 10.0;
+
+    // The code immediately below can likely be generalized into a function that returns a mesh
+    int elemCounter = 0;
+    int nodeCounter = 0;
+    double xLeft = 0.0;
+    double xRight = 0.0;
+    double yBot = 0.0;
+    double yTop = 0.0;
+    std::vector< std::vector< double > > dummyNodeCoords(4,std::vector< double >(2,0.0));
+    std::vector< int > dummyGlobNodeMap(4);
+    
+    TwoDimMeshOfElements rectMesh((numbElemX+1)*2, numbElemX); 
+    for (int yIdx = 1; yIdx <= numbElemY; yIdx++) {
+        
+        yTop += yStep;
+
+        for (int xIdx = 1; xIdx <= numbElemX; xIdx++) {
+
+            xRight += xStep;
+            
+
+            elemCounter++;
+
+            dummyNodeCoords[0][0] = xLeft;
+            dummyNodeCoords[0][1] = yBot;
+            dummyNodeCoords[1][0] = xRight;
+            dummyNodeCoords[1][1] = yBot;
+            dummyNodeCoords[2][0] = xRight;
+            dummyNodeCoords[2][1] = yTop;
+            dummyNodeCoords[3][0] = xLeft;
+            dummyNodeCoords[3][1] = yTop;
+
+            TwoDimThermalElement *dummyElement = new XyLinearThermalMeloshElement();
+            dummyElement->setNodeCoords(dummyNodeCoords);
+            dummyElement->setIsoThermCond(isoThermCond);
+            dummyElement->setElemThick(thick);
+
+            std::vector< int > dummyGlobElementMap(4);
+            // Not fully generalized past one row
+            dummyGlobNodeMap[0] = xIdx;
+            dummyGlobNodeMap[1] = xIdx+1;
+            dummyGlobNodeMap[2] = numbElemX*yIdx+1+xIdx;
+            dummyGlobNodeMap[3] = numbElemX*yIdx+2+xIdx;
+            
+            rectMesh.addExistingElement(elemCounter, dummyElement, dummyGlobNodeMap);
+
+            xLeft += xStep;
+        };
+        yBot += yStep;
+    };
+
+    int surfOneId = rectMesh.makeNewSurf();
+    rectMesh.addLocSurfToMesh(surfOneId, numbElemX, 2);
+    rectMesh.setScalarSurfFlux(surfOneId, -1000.0);
+
+    int surfTwoId = rectMesh.makeNewSurf();
+    rectMesh.addLocSurfToMesh(surfTwoId, 1, 4);
+    rectMesh.setScalarSurfFlux(surfTwoId, 1000.0);
+    
+    std::vector< int > nodeWithSetVal(2);
+    nodeWithSetVal[0] = 1;
+    nodeWithSetVal[1] = numbElemX+2;
+    std::vector< double > setNodeVal(2,100.0);
+    rectMesh.setFixedNodeVals(nodeWithSetVal, setNodeVal);
+
+    std::vector< std::vector< double > > solveStiffMat = rectMesh.getStiffMatToSolve();
+    std::vector< double > solveLoadVect = rectMesh.getLoadVectToSolve();
+    std::vector< double > calcNodeTemps = gaussianElimSolve(solveStiffMat,solveLoadVect);
+    
+    std::vector< std::vector< double > > rawStiffMat = rectMesh.getRawGlobStiffMatrix();
+
+    std::cout << "Raw K-Matrix:" << std::endl;
+    // printMatrix(rawStiffMat);
+
+    std::cout << "Solvable K-Matrix:" << std::endl;
+    // printMatrix(solveStiffMat);
+    std::cout << "Solvable Load Vector:" << std::endl;
+    // printMatrix(solveLoadVect);
+    std::cout << "Calculated Node Values:" << std::endl;
+    // printMatrix(calcNodeTemps);
+
+};
 
 void nineElementMeshTest() {
 /*
@@ -333,4 +451,5 @@ void nineElementMeshTest() {
 void patchMain() {
     slideOneElementMeshTest();
     oneElementMeshTest();
+    threeElementMeshTest();
 };

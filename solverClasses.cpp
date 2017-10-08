@@ -18,7 +18,7 @@ std::vector< double > gaussianElimSolve(std::vector< std::vector< double > > aMa
         for (int jdx = idx+1; jdx < matrixSize; ++jdx){
             double multVal = aMatrix[jdx][idx];
             for (int kdx = idx; kdx < matrixSize; ++kdx){
-                std::cout << idx << "  " << jdx << "  " << kdx << "  " << aMatrix[jdx][kdx] << "  " << aMatrix[idx][kdx] << "  " << multVal << std::endl; 
+                // std::cout << idx << "  " << jdx << "  " << kdx << "  " << aMatrix[jdx][kdx] << "  " << aMatrix[idx][kdx] << "  " << multVal << std::endl; 
                 aMatrix[jdx][kdx] -= aMatrix[idx][kdx]*multVal;
             };
             bVector[jdx] -= bVector[idx]*multVal;

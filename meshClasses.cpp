@@ -1,7 +1,10 @@
 #include "meshClasses.h"
+#include <iostream>
 
 TwoDimMeshOfElements::TwoDimMeshOfElements(int nodesInMesh, int elementsInMesh) {
     
+    //TODO: There should be more intrinsic setting of the number of nodes
+
     this->numbOfSurfs = 0;
 
     this->numbOfNodes = nodesInMesh;
@@ -19,6 +22,7 @@ TwoDimMeshOfElements::TwoDimMeshOfElements(int nodesInMesh, int elementsInMesh) 
 void TwoDimMeshOfElements::addExistingElement(int elementNumb, TwoDimThermalElement* element, std::vector<int> globalNodeNumbs) {
 
     //TODO: Add error for global node list size not matching number of nodes on element
+    //TODO: There should be more intrinsic setting of the number of nodes
 
     //element tracking
     int elementIdx = elementNumb-1;
@@ -115,6 +119,7 @@ std::vector< double > TwoDimMeshOfElements::getRawGlobLoadVect() {
 
 
             globLoad[globRowIdx] += locLoads[locRowIdx];
+            std::cout<<"raw: "<<locLoads[locRowIdx]<<std::endl;
         };
     };
     
@@ -125,7 +130,9 @@ void TwoDimMeshOfElements::setFixedNodeVals(std::vector< int > nodesToSet, std::
 
     int nodeIdx = 0;
     for (int setIdx = 0; setIdx < nodesToSet.size(); setIdx++) {
+        std::cout << setIdx << std::endl;
         nodeIdx = nodesToSet[setIdx]-1;
+        std::cout << nodeIdx << std::endl;
         this->nodeValSet[nodeIdx] = true;
         this->nodeVals[nodeIdx] = setVals[setIdx];
     };
@@ -155,7 +162,7 @@ std::vector< std::vector< double > > TwoDimMeshOfElements::getStiffMatToSolve() 
 std::vector< double > TwoDimMeshOfElements::getLoadVectToSolve() {
     std::vector< double > rawLoad = this->getRawGlobLoadVect();
     std::vector< double > solveLoad;
-    double dummy = 0.0;
+    double dummy;
 
     for (int rowIdx=0; rowIdx < this->numbOfNodes; rowIdx++) {
         if (this->nodeValSet[rowIdx]) {
@@ -163,6 +170,7 @@ std::vector< double > TwoDimMeshOfElements::getLoadVectToSolve() {
         }
         else {
             dummy = rawLoad[rowIdx];
+            std::cout<<"final: "<<dummy<<std::endl;
         };
         solveLoad.push_back(dummy);
     };
