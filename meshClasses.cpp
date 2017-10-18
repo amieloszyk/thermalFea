@@ -108,6 +108,8 @@ std::vector< double > TwoDimMeshOfElements::getRawGlobLoadVect() {
     std::vector< double > locLoads;
     std::vector< int > globNodeNumbs;
 
+    //TODO: There is an issue here with the vector not being made to the full size
+
     for (int elemIdx=0; elemIdx < this->numbOfElements; elemIdx++) {
 
         locLoads = this->elementObjList[elemIdx]->getTotalLoadVect();
@@ -119,7 +121,6 @@ std::vector< double > TwoDimMeshOfElements::getRawGlobLoadVect() {
 
 
             globLoad[globRowIdx] += locLoads[locRowIdx];
-            std::cout<<"raw: "<<locLoads[locRowIdx]<<std::endl;
         };
     };
     
@@ -169,8 +170,12 @@ std::vector< double > TwoDimMeshOfElements::getLoadVectToSolve() {
             dummy = this->nodeVals[rowIdx];
         }
         else {
-            dummy = rawLoad[rowIdx];
-            std::cout<<"final: "<<dummy<<std::endl;
+            if (abs(rawLoad[rowIdx]) < 1.0e-10) {
+                dummy = 0.0;
+            }
+            else {
+                dummy = rawLoad[rowIdx];
+            }
         };
         solveLoad.push_back(dummy);
     };

@@ -174,15 +174,15 @@ void oneElementMeshTest() {
 void threeElementMeshTest() {
     
 /*
-      5           6           7           8
-100K  +-----------+-----------+-----------+
-      |           |           |           |<-
-      |           |           |           |<-
-      |     1     |     2     |     3     |<- 1000 W/m2
-      | k=10W/m-K | k=10W/m-K | k=10W/m-K |<-
-      |           |           |           |<-
-      +-----------+-----------+-----------+
-      1           2           3           4
+             5           6           7           8
+       100K  +-----------+-----------+-----------+
+            <-|           |           |           |<-
+            <-|           |           |           |<-
+ 1000 W/m2  <-|     1     |     2     |     3     |<- 1000 W/m2
+            <-| k=10W/m-K | k=10W/m-K | k=10W/m-K |<-
+            <-|           |           |           |<-
+             +-----------+-----------+-----------+
+             1           2           3           4
 
 */
 
@@ -266,16 +266,19 @@ void threeElementMeshTest() {
     std::vector< double > calcNodeTemps = gaussianElimSolve(solveStiffMat,solveLoadVect);
     
     std::vector< std::vector< double > > rawStiffMat = rectMesh.getRawGlobStiffMatrix();
+    std::vector< double > rawLoadVect = rectMesh.getRawGlobLoadVect();
 
     std::cout << "Raw K-Matrix:" << std::endl;
-    // printMatrix(rawStiffMat);
+    printMatrix(rawStiffMat);
+    std::cout << "Raw Load Vector:" << std::endl;
+    printMatrix(rawLoadVect);
 
     std::cout << "Solvable K-Matrix:" << std::endl;
-    // printMatrix(solveStiffMat);
+    printMatrix(solveStiffMat);
     std::cout << "Solvable Load Vector:" << std::endl;
-    // printMatrix(solveLoadVect);
+    printMatrix(solveLoadVect);
     std::cout << "Calculated Node Values:" << std::endl;
-    // printMatrix(calcNodeTemps);
+    printMatrix(calcNodeTemps);
 
 };
 
