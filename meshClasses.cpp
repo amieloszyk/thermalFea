@@ -108,7 +108,7 @@ std::vector< double > TwoDimMeshOfElements::getRawGlobLoadVect() {
     std::vector< double > locLoads;
     std::vector< int > globNodeNumbs;
 
-    //TODO: There is an issue here with the vector not being made to the full size
+    // TODO: There is an issue with the lodes not being assigned to the right nodes
 
     for (int elemIdx=0; elemIdx < this->numbOfElements; elemIdx++) {
 
@@ -124,7 +124,7 @@ std::vector< double > TwoDimMeshOfElements::getRawGlobLoadVect() {
         };
     };
     
-    return locLoads;
+    return globLoad;
 };
 
 void TwoDimMeshOfElements::setFixedNodeVals(std::vector< int > nodesToSet, std::vector< double > setVals) {
@@ -165,17 +165,15 @@ std::vector< double > TwoDimMeshOfElements::getLoadVectToSolve() {
     std::vector< double > solveLoad;
     double dummy;
 
+    std::cout << "# Nodes " << this->numbOfNodes << std::endl;
+    std::cout << "Raw Load size " << rawLoad.size() << std::endl;
+
     for (int rowIdx=0; rowIdx < this->numbOfNodes; rowIdx++) {
         if (this->nodeValSet[rowIdx]) {
             dummy = this->nodeVals[rowIdx];
         }
         else {
-            if (abs(rawLoad[rowIdx]) < 1.0e-10) {
-                dummy = 0.0;
-            }
-            else {
-                dummy = rawLoad[rowIdx];
-            }
+            dummy = rawLoad[rowIdx];
         };
         solveLoad.push_back(dummy);
     };
