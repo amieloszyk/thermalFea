@@ -237,9 +237,9 @@ void threeElementMeshTest() {
             // Not fully generalized past one row
             dummyGlobNodeMap[0] = xIdx;
             dummyGlobNodeMap[1] = xIdx+1;
-            dummyGlobNodeMap[2] = numbElemX*yIdx+1+xIdx;
-            dummyGlobNodeMap[3] = numbElemX*yIdx+2+xIdx;
-            
+            dummyGlobNodeMap[2] = numbElemX*yIdx+2+xIdx;
+            dummyGlobNodeMap[3] = numbElemX*yIdx+1+xIdx;
+
             rectMesh.addExistingElement(elemCounter, dummyElement, dummyGlobNodeMap);
 
             xLeft += xStep;

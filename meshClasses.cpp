@@ -108,8 +108,6 @@ std::vector< double > TwoDimMeshOfElements::getRawGlobLoadVect() {
     std::vector< double > locLoads;
     std::vector< int > globNodeNumbs;
 
-    // TODO: There is an issue with the lodes not being assigned to the right nodes
-
     for (int elemIdx=0; elemIdx < this->numbOfElements; elemIdx++) {
 
         locLoads = this->elementObjList[elemIdx]->getTotalLoadVect();
@@ -118,7 +116,6 @@ std::vector< double > TwoDimMeshOfElements::getRawGlobLoadVect() {
 
         for (int locRowIdx=0; locRowIdx < numbLocNodes; locRowIdx++) {
             int globRowIdx = globNodeNumbs[locRowIdx]-1;
-
 
             globLoad[globRowIdx] += locLoads[locRowIdx];
         };
@@ -164,9 +161,6 @@ std::vector< double > TwoDimMeshOfElements::getLoadVectToSolve() {
     std::vector< double > rawLoad = this->getRawGlobLoadVect();
     std::vector< double > solveLoad;
     double dummy;
-
-    std::cout << "# Nodes " << this->numbOfNodes << std::endl;
-    std::cout << "Raw Load size " << rawLoad.size() << std::endl;
 
     for (int rowIdx=0; rowIdx < this->numbOfNodes; rowIdx++) {
         if (this->nodeValSet[rowIdx]) {
