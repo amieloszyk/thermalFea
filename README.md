@@ -3,7 +3,7 @@ First try at thermal conduction FEA using C++
 
 
 Things to do:
-    - [ ] Verify that code works in current state (patch test of Milos elements)
+    - [x] Verify that code works in current state (patch test of Milos elements)
     - [ ] Reorganize file structure (src, build, bin, include, doc, examples, scripts, tests, gui)
     - [ ] Reorganize / create code execution structure
     - [ ] Create an input data structure
