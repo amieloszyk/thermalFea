@@ -1,7 +1,7 @@
 #include "meshClasses.h"
 #include <iostream>
 
-TwoDimMeshOfElements::TwoDimMeshOfElements(int nodesInMesh, int elementsInMesh) {
+TwoDimMeshOfElements::TwoDimMeshOfElements(int nodesInMesh=0, int elementsInMesh=0) {
     
     //TODO: There should be more intrinsic setting of the number of nodes
 
@@ -16,7 +16,24 @@ TwoDimMeshOfElements::TwoDimMeshOfElements(int nodesInMesh, int elementsInMesh) 
     this->elementObjList.resize(elementsInMesh);
     this->globNodeOnElementMap.resize(elementsInMesh);
     
+};
+
+int TwoDimMeshOfElements::addNewElement(std::string elemType, std::vector< std::vector< double > > nodeCoords,
+                                        std::vector< int > globalNodeNumbs){
     
+    this->numbOfElements++;
+    int elementNumb = this->numbOfElements;
+    this->numbOfNodes += globalNodeNumbs.size();
+    
+    if (nodeCoords.size() == 4) {
+        if (elemType == "melosh") {
+            TwoDimThermalElement *dummyElement = new XyLinearThermalMeloshElement();
+            dummyElement->setNodeCoords(nodeCoords);
+            this->addExistingElement(elementNumb, dummyElement, globalNodeNumbs);
+        }
+    }
+    
+    return elementNumb;
 };
 
 void TwoDimMeshOfElements::addExistingElement(int elementNumb, TwoDimThermalElement* element, std::vector<int> globalNodeNumbs) {

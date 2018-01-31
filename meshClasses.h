@@ -1,10 +1,8 @@
 #include <vector>
+#include <string>
 #include "elementClasses.cpp"
 //#include "polySource/oneDimPoly.cpp"
 
-class GeneralMesh {
-    //Need to make an abstract mesh class that is not dependent on dimensionality or element type
-};
 
 class TwoDimMeshOfElements {
 
@@ -26,26 +24,38 @@ class TwoDimMeshOfElements {
 
     public:
 
-        //Note that some of these should be in the parent class
 
-        // Unimplemented and untested
-        void setSurfaceFixedVals(int globSurfNumb, double nodeVal); // allow polynomials too
-        std::vector< std::vector< double > > getStiffMatToSolve();
-        std::vector< double > getLoadVectToSolve();
-        // std::vector< double > solveNodeVals(); -> remove
-        void checkNumbOfNodes();
-        void checkNumbOfElements();
-        void getGlobToLocMapping(); // Likely a vector of some sort, not void
-
-        // Implemented, not tested
+        // Implemented and tested
         TwoDimMeshOfElements(int nodesInMesh, int elementsInMesh);
         void addExistingElement(int elementNumb, TwoDimThermalElement* element, std::vector<int> globalNodeNumbs);
         int makeNewSurf();
         void addLocSurfToMesh(int meshSurfNumb, int meshElementNumb, int locSurfNumb);
-        void addLocCoordLoadToSurf(int globSurfNumb, OneDimPoly locCoordPoly);
         void setScalarSurfFlux(int globSurfNumb, double scalarFlux);
         std::vector< std::vector< double > > getRawGlobStiffMatrix();
         std::vector< double > getRawGlobLoadVect();
         void setFixedNodeVals(std::vector< int > nodesToSet, std::vector< double > setVals);
+        std::vector< std::vector< double > > getStiffMatToSolve();
+        std::vector< double > getLoadVectToSolve();
+        void addLocCoordLoadToSurf(int globSurfNumb, OneDimPoly locCoordPoly);
+        
+
+        // Implemented, not tested
+        int addNewElement(std::string elemType, std::vector< std::vector< double > > nodeCoords,
+                          std::vector< int > globalNodeNumbs);
+        
+        
+        // Unimplemented and untested
+        void setElementThick(float thick, std::vector< int > elementSet);
+        void setElementIsoThermCond(float isoThermCond, std::vector< int > elementSet);
+        void setAllThick(float thick);
+        void setAllIsoThermCond(float isoThermCond);
+
+        void setSurfaceFixedVals(int globSurfNumb, double nodeVal); // allow polynomials too
+        // std::vector< double > solveNodeVals(); -> remove
+        void checkNumbOfNodes();
+        void checkNumbOfElements();
+        void getGlobToLocMapping(); // Likely a vector of some sort, not void
+        
+       
 
 };
