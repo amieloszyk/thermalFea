@@ -26,7 +26,7 @@ class TwoDimMeshOfElements {
 
 
         // Implemented and tested
-        TwoDimMeshOfElements(int nodesInMesh, int elementsInMesh);
+        TwoDimMeshOfElements(int nodesInMesh=0, int elementsInMesh=0);
         void addExistingElement(int elementNumb, TwoDimThermalElement* element, std::vector<int> globalNodeNumbs);
         int makeNewSurf();
         void addLocSurfToMesh(int meshSurfNumb, int meshElementNumb, int locSurfNumb);
@@ -45,12 +45,14 @@ class TwoDimMeshOfElements {
         
         
         // Unimplemented and untested
-        void setElementThick(float thick, std::vector< int > elementSet);
-        void setElementIsoThermCond(float isoThermCond, std::vector< int > elementSet);
+        void setElemThick(float thick, int elementNumb);
+        void setElemIsoThermCond(float isoThermCond, int elementNumb);
         void setAllThick(float thick);
         void setAllIsoThermCond(float isoThermCond);
 
         void setSurfaceFixedVals(int globSurfNumb, double nodeVal); // allow polynomials too
+        int makeNewElemSet();
+        int makeNewNodeSet();
         // std::vector< double > solveNodeVals(); -> remove
         void checkNumbOfNodes();
         void checkNumbOfElements();

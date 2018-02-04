@@ -1,12 +1,13 @@
 #include "meshClasses.h"
 #include <iostream>
 
-TwoDimMeshOfElements::TwoDimMeshOfElements(int nodesInMesh=0, int elementsInMesh=0) {
+TwoDimMeshOfElements::TwoDimMeshOfElements(int nodesInMesh, int elementsInMesh) {
     
     //TODO: There should be more intrinsic setting of the number of nodes
 
     this->numbOfSurfs = 0;
 
+    //TODO: Need to make a resizing method (one that can handle an empty mesh...)
     this->numbOfNodes = nodesInMesh;
     this->nodeCoords.resize(nodesInMesh);
     this->nodeVals.resize(nodesInMesh,0.0);
@@ -25,6 +26,8 @@ int TwoDimMeshOfElements::addNewElement(std::string elemType, std::vector< std::
     int elementNumb = this->numbOfElements;
     this->numbOfNodes += globalNodeNumbs.size();
     
+    //TODO: Need to handle vector resizing...
+
     if (nodeCoords.size() == 4) {
         if (elemType == "melosh") {
             TwoDimThermalElement *dummyElement = new XyLinearThermalMeloshElement();
@@ -34,6 +37,26 @@ int TwoDimMeshOfElements::addNewElement(std::string elemType, std::vector< std::
     }
     
     return elementNumb;
+};
+
+void TwoDimMeshOfElements::setElemThick(float thick, int elementNumb){
+    this->elementObjList[elementNumb-1]->setElemThick(thick);
+};
+
+void TwoDimMeshOfElements::setAllThick(float thick){
+    for(int elemNumb=1; elemNumb <= this->numbOfElements; elemNumb++){
+        this->setElemThick(thick,elemNumb+1);
+    };
+};
+
+void TwoDimMeshOfElements::setElemIsoThermCond(float isoThermCond, int elementNumb){
+    this->elementObjList[elementNumb-1]->setIsoThermCond(isoThermCond);
+};
+
+void TwoDimMeshOfElements::setAllIsoThermCond(float isoThermCond){
+    for(int elemNumb=1; elemNumb <= this->numbOfElements; elemNumb++){
+        this->setElemIsoThermCond(isoThermCond,elemNumb);
+    };
 };
 
 void TwoDimMeshOfElements::addExistingElement(int elementNumb, TwoDimThermalElement* element, std::vector<int> globalNodeNumbs) {

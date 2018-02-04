@@ -186,6 +186,7 @@ void threeElementMeshTest() {
 
 */
 
+    std::cout << "-2";
     double xStart = 0.0;
     double xEnd = 3.0;
     double yStart = 0.0;
@@ -207,7 +208,9 @@ void threeElementMeshTest() {
     std::vector< std::vector< double > > dummyNodeCoords(4,std::vector< double >(2,0.0));
     std::vector< int > dummyGlobNodeMap(4);
     
-    TwoDimMeshOfElements rectMesh((numbElemX+1)*2, numbElemX); 
+    TwoDimMeshOfElements rectMesh((numbElemX+1)*2, numbElemX);
+    std::cout << "-1";
+    // TwoDimMeshOfElements rectMesh;
     for (int yIdx = 1; yIdx <= numbElemY; yIdx++) {
         
         yTop += yStep;
@@ -228,19 +231,28 @@ void threeElementMeshTest() {
             dummyNodeCoords[3][0] = xLeft;
             dummyNodeCoords[3][1] = yTop;
 
+            
+
             TwoDimThermalElement *dummyElement = new XyLinearThermalMeloshElement();
             dummyElement->setNodeCoords(dummyNodeCoords);
             dummyElement->setIsoThermCond(isoThermCond);
             dummyElement->setElemThick(thick);
 
-            std::vector< int > dummyGlobElementMap(4);
+            // std::vector< int > dummyGlobElementMap(4);
             // Not fully generalized past one row
             dummyGlobNodeMap[0] = xIdx;
             dummyGlobNodeMap[1] = xIdx+1;
             dummyGlobNodeMap[2] = numbElemX*yIdx+2+xIdx;
             dummyGlobNodeMap[3] = numbElemX*yIdx+1+xIdx;
 
-            rectMesh.addExistingElement(elemCounter, dummyElement, dummyGlobNodeMap);
+            // std::cout << "0";
+            // rectMesh.addNewElement("melosh",dummyNodeCoords,dummyGlobNodeMap);
+            // std::cout << "1";
+            // rectMesh.setElemThick(thick,elemCounter);
+            // std::cout << "2";
+            // rectMesh.setElemIsoThermCond(isoThermCond,elemCounter);
+            // std::cout << "3";
+            // rectMesh.addExistingElement(elemCounter, dummyElement, dummyGlobNodeMap);
 
             xLeft += xStep;
         };
