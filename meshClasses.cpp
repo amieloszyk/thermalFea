@@ -45,7 +45,14 @@ int TwoDimMeshOfElements::addNewElement(std::string elemType, std::vector< std::
     this->numbOfNodes += globalNodeNumbs.size();
     this->resizeNodesAndElements();
 
-    //TODO: This is breaking here. Need to fix string comparison?
+    //TODO: This is breaking here. 
+    // The issue is that I am allowing the global node numbers to be larger than 
+    // the number of global nodes, which creates memory access issues for 
+    // unallocated space. There are two solutions: 1) Force node numbering to 
+    // match pace with the element numbering (i.e. never allow node numbers 
+    // > the number that exist); or 2) Trust that the 'missing' nodes will get
+    // added an resize the node dependent vectors to be the size of the largest 
+    // node number (that feels dangerous)
     if (nodeCoords.size() == 4) {
         if (elemType == "melosh") {
             TwoDimThermalElement *dummyElement = new XyLinearThermalMeloshElement();
