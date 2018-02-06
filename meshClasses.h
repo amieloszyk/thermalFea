@@ -42,7 +42,7 @@ class TwoDimMeshOfElements {
         // Implemented, not tested
         int addNewElement(std::string elemType, std::vector< std::vector< double > > nodeCoords,
                           std::vector< int > globalNodeNumbs);
-        
+        void resizeNodesAndElements();
         
         // Unimplemented and untested
         void setElemThick(float thick, int elementNumb);

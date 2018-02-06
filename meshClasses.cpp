@@ -7,16 +7,34 @@ TwoDimMeshOfElements::TwoDimMeshOfElements(int nodesInMesh, int elementsInMesh) 
 
     this->numbOfSurfs = 0;
 
-    //TODO: Need to make a resizing method (one that can handle an empty mesh...)
     this->numbOfNodes = nodesInMesh;
-    this->nodeCoords.resize(nodesInMesh);
-    this->nodeVals.resize(nodesInMesh,0.0);
-    this->nodeValSet.resize(nodesInMesh,false);
-
     this->numbOfElements = elementsInMesh;
-    this->elementObjList.resize(elementsInMesh);
-    this->globNodeOnElementMap.resize(elementsInMesh);
     
+    this->resizeNodesAndElements();
+};
+
+void TwoDimMeshOfElements::resizeNodesAndElements(){
+    
+    if (this->numbOfNodes == 0){
+        this->nodeCoords.clear();
+        this->nodeVals.clear();
+        this->nodeValSet.clear();
+    }
+    else {
+        this->nodeCoords.resize(this->numbOfNodes);
+        this->nodeVals.resize(this->numbOfNodes,0.0);
+        this->nodeValSet.resize(this->numbOfNodes,false);
+    };
+
+    if (this->numbOfElements == 0){
+        this->elementObjList.clear();
+        this->globNodeOnElementMap.clear();
+    }
+    else {
+        this->elementObjList.resize(this->numbOfElements);
+        this->globNodeOnElementMap.resize(this->numbOfElements);
+    };
+
 };
 
 int TwoDimMeshOfElements::addNewElement(std::string elemType, std::vector< std::vector< double > > nodeCoords,
@@ -25,9 +43,9 @@ int TwoDimMeshOfElements::addNewElement(std::string elemType, std::vector< std::
     this->numbOfElements++;
     int elementNumb = this->numbOfElements;
     this->numbOfNodes += globalNodeNumbs.size();
-    
-    //TODO: Need to handle vector resizing...
+    this->resizeNodesAndElements();
 
+    //TODO: This is breaking here. Need to fix string comparison?
     if (nodeCoords.size() == 4) {
         if (elemType == "melosh") {
             TwoDimThermalElement *dummyElement = new XyLinearThermalMeloshElement();
