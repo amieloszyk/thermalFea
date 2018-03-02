@@ -186,7 +186,7 @@ void threeElementMeshTest() {
 
 */
 
-    std::cout << "-2";
+    std::cout << "-2"<<std::endl;
     double xStart = 0.0;
     double xEnd = 3.0;
     double yStart = 0.0;
@@ -209,7 +209,7 @@ void threeElementMeshTest() {
     std::vector< int > dummyGlobNodeMap(4);
     
     // TwoDimMeshOfElements rectMesh((numbElemX+1)*2, numbElemX);
-    std::cout << "-1";
+    std::cout << "-1"<<std::endl;
     TwoDimMeshOfElements rectMesh;
     for (int yIdx = 1; yIdx <= numbElemY; yIdx++) {
         
@@ -245,7 +245,7 @@ void threeElementMeshTest() {
             dummyGlobNodeMap[2] = numbElemX*yIdx+2+xIdx;
             dummyGlobNodeMap[3] = numbElemX*yIdx+1+xIdx;
 
-            std::cout << "0";
+            std::cout << "0"<<std::endl;
             rectMesh.addNewElement("melosh",dummyNodeCoords,dummyGlobNodeMap);
             // std::cout << "1";
             // rectMesh.setElemThick(thick,elemCounter);
@@ -258,32 +258,33 @@ void threeElementMeshTest() {
         };
         yBot += yStep;
     };
+    std::cout << "1"<<std::endl;
+    int surfOneId = rectMesh.makeNewSurf();
+    rectMesh.addLocSurfToMesh(surfOneId, numbElemX, 2);
+    rectMesh.setScalarSurfFlux(surfOneId, -1000.0);
 
-    // int surfOneId = rectMesh.makeNewSurf();
-    // rectMesh.addLocSurfToMesh(surfOneId, numbElemX, 2);
-    // rectMesh.setScalarSurfFlux(surfOneId, -1000.0);
-
-    // int surfTwoId = rectMesh.makeNewSurf();
-    // rectMesh.addLocSurfToMesh(surfTwoId, 1, 4);
-    // rectMesh.setScalarSurfFlux(surfTwoId, 1000.0);
+    int surfTwoId = rectMesh.makeNewSurf();
+    rectMesh.addLocSurfToMesh(surfTwoId, 1, 4);
+    rectMesh.setScalarSurfFlux(surfTwoId, 1000.0);
     
-    // std::vector< int > nodeWithSetVal(2);
-    // nodeWithSetVal[0] = 1;
-    // nodeWithSetVal[1] = numbElemX+2;
-    // std::vector< double > setNodeVal(2,100.0);
-    // rectMesh.setFixedNodeVals(nodeWithSetVal, setNodeVal);
+    std::vector< int > nodeWithSetVal(2);
+    nodeWithSetVal[0] = 1;
+    nodeWithSetVal[1] = numbElemX+2;
+    std::vector< double > setNodeVal(2,100.0);
+    rectMesh.setFixedNodeVals(nodeWithSetVal, setNodeVal);
 
     // std::vector< std::vector< double > > solveStiffMat = rectMesh.getStiffMatToSolve();
     // std::vector< double > solveLoadVect = rectMesh.getLoadVectToSolve();
     // std::vector< double > calcNodeTemps = gaussianElimSolve(solveStiffMat,solveLoadVect);
     
-    // std::vector< std::vector< double > > rawStiffMat = rectMesh.getRawGlobStiffMatrix();
-    // std::vector< double > rawLoadVect = rectMesh.getRawGlobLoadVect();
+    // error here
+    std::vector< std::vector< double > > rawStiffMat = rectMesh.getRawGlobStiffMatrix();
+    std::vector< double > rawLoadVect = rectMesh.getRawGlobLoadVect();
 
-    // std::cout << "Raw K-Matrix:" << std::endl;
-    // printMatrix(rawStiffMat);
-    // std::cout << "Raw Load Vector:" << std::endl;
-    // printMatrix(rawLoadVect);
+    std::cout << "Raw K-Matrix:" << std::endl;
+    printMatrix(rawStiffMat);
+    std::cout << "Raw Load Vector:" << std::endl;
+    printMatrix(rawLoadVect);
 
     // std::cout << "Solvable K-Matrix:" << std::endl;
     // printMatrix(solveStiffMat);

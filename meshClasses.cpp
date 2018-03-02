@@ -1,5 +1,6 @@
 #include "meshClasses.h"
 #include <iostream>
+#include <algorithm>
 
 TwoDimMeshOfElements::TwoDimMeshOfElements(int nodesInMesh, int elementsInMesh) {
     
@@ -19,11 +20,13 @@ void TwoDimMeshOfElements::resizeNodesAndElements(){
         this->nodeCoords.clear();
         this->nodeVals.clear();
         this->nodeValSet.clear();
+        this->nodeNumbList.clear();
     }
     else {
         this->nodeCoords.resize(this->numbOfNodes);
         this->nodeVals.resize(this->numbOfNodes,0.0);
         this->nodeValSet.resize(this->numbOfNodes,false);
+        this->nodeNumbList.resize(this->numbOfNodes);
     };
 
     if (this->numbOfElements == 0){
@@ -40,19 +43,19 @@ void TwoDimMeshOfElements::resizeNodesAndElements(){
 int TwoDimMeshOfElements::addNewElement(std::string elemType, std::vector< std::vector< double > > nodeCoords,
                                         std::vector< int > globalNodeNumbs){
     
+    // WORK IN PROGRESS: I am trying to implement a global node number tracking system that is not quite working
+
     this->numbOfElements++;
     int elementNumb = this->numbOfElements;
-    this->numbOfNodes += globalNodeNumbs.size();
+    int newNodes = 0;
+    for(int idx=0; idx < globalNodeNumbs.size(); idx++){
+        if(std::find(this->nodeNumbList.begin(),this->nodeNumbList.end(),
+            globalNodeNumbs[idx]) == this->nodeNumbList.end()){
+                this->numbOfNodes++;
+            }
+    };
     this->resizeNodesAndElements();
 
-    //TODO: This is breaking here. 
-    // The issue is that I am allowing the global node numbers to be larger than 
-    // the number of global nodes, which creates memory access issues for 
-    // unallocated space. There are two solutions: 1) Force node numbering to 
-    // match pace with the element numbering (i.e. never allow node numbers 
-    // > the number that exist); or 2) Trust that the 'missing' nodes will get
-    // added an resize the node dependent vectors to be the size of the largest 
-    // node number (that feels dangerous)
     if (nodeCoords.size() == 4) {
         if (elemType == "melosh") {
             TwoDimThermalElement *dummyElement = new XyLinearThermalMeloshElement();
@@ -60,7 +63,7 @@ int TwoDimMeshOfElements::addNewElement(std::string elemType, std::vector< std::
             this->addExistingElement(elementNumb, dummyElement, globalNodeNumbs);
         }
     }
-    
+
     return elementNumb;
 };
 
@@ -84,6 +87,11 @@ void TwoDimMeshOfElements::setAllIsoThermCond(float isoThermCond){
     };
 };
 
+int TwoDimMeshOfElements::getNodeIdx(int globNodeNumb){
+    int globNodeIdx = std::find(this->nodeNumbList.begin(),this->nodeNumbList.end(),globNodeNumb)-this->nodeNumbList.begin();
+    return globNodeIdx;
+};
+
 void TwoDimMeshOfElements::addExistingElement(int elementNumb, TwoDimThermalElement* element, std::vector<int> globalNodeNumbs) {
 
     //TODO: Add error for global node list size not matching number of nodes on element
@@ -94,11 +102,18 @@ void TwoDimMeshOfElements::addExistingElement(int elementNumb, TwoDimThermalElem
     element->setNodeGlobNumber(globalNodeNumbs);
     this->elementObjList[elementIdx] = element;
     this->globNodeOnElementMap[elementIdx] = globalNodeNumbs;
+    for(int idx=0; idx < 4; idx++){
+        this->nodeNumbList[this->numbOfNodes-(4-idx)] = globalNodeNumbs[idx];
+    }
 
     //node tracking
     std::vector< std::vector< double > > newNodeCoords = element->getNodeCoords();
+    int globNodeNumb;
+    int globNodeIdx;
     for(int locNodeIdx = 0; locNodeIdx < globalNodeNumbs.size(); locNodeIdx++) {
-        this->nodeCoords[globalNodeNumbs[locNodeIdx]-1] = newNodeCoords[locNodeIdx];
+        globNodeNumb = globalNodeNumbs[locNodeIdx];
+        this->getNodeIdx(globNodeNumb);
+        this->nodeCoords[globNodeIdx] = newNodeCoords[locNodeIdx];
     };
 
 };
@@ -142,6 +157,8 @@ void TwoDimMeshOfElements::setScalarSurfFlux(int globSurfNumb, double scalarFlux
 
 std::vector< std::vector< double > > TwoDimMeshOfElements::getRawGlobStiffMatrix() {
     
+    //TODO: There is an error here associated with the new node tracking system
+
     std::vector< std::vector< double > > globStiff(this->numbOfNodes, std::vector< double >(this->numbOfNodes, 0.0));
     std::vector< std::vector< double > > locStiff;
     std::vector< int > globNodeNumbs;
@@ -153,10 +170,10 @@ std::vector< std::vector< double > > TwoDimMeshOfElements::getRawGlobStiffMatrix
         int numbLocNodes = globNodeNumbs.size();
 
         for (int locRowIdx=0; locRowIdx < numbLocNodes; locRowIdx++) {
-            int globRowIdx = globNodeNumbs[locRowIdx]-1;
+            int globRowIdx = this->getNodeIdx(globNodeNumbs[locRowIdx]);
 
             for (int locColIdx=0; locColIdx < numbLocNodes; locColIdx++) {
-                int globColIdx = globNodeNumbs[locColIdx]-1;
+                int globColIdx = this->getNodeIdx(globNodeNumbs[locRowIdx]);
 
                 globStiff[globRowIdx][globColIdx] += locStiff[locRowIdx][locColIdx];
             };
@@ -193,9 +210,7 @@ void TwoDimMeshOfElements::setFixedNodeVals(std::vector< int > nodesToSet, std::
 
     int nodeIdx = 0;
     for (int setIdx = 0; setIdx < nodesToSet.size(); setIdx++) {
-        std::cout << setIdx << std::endl;
-        nodeIdx = nodesToSet[setIdx]-1;
-        std::cout << nodeIdx << std::endl;
+        nodeIdx = this->getNodeIdx(nodesToSet[setIdx]);
         this->nodeValSet[nodeIdx] = true;
         this->nodeVals[nodeIdx] = setVals[setIdx];
     };

@@ -15,6 +15,7 @@ class TwoDimMeshOfElements {
         
         int numbOfNodes;
         std::vector< std::vector< double > > nodeCoords;
+        std::vector< int > nodeNumbList;
         std::vector< double > nodeVals;
         std::vector< bool > nodeValSet;
 
@@ -43,6 +44,7 @@ class TwoDimMeshOfElements {
         int addNewElement(std::string elemType, std::vector< std::vector< double > > nodeCoords,
                           std::vector< int > globalNodeNumbs);
         void resizeNodesAndElements();
+        int getNodeIdx(int globNodeNumb);
         
         // Unimplemented and untested
         void setElemThick(float thick, int elementNumb);
