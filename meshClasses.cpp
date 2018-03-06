@@ -43,18 +43,16 @@ void TwoDimMeshOfElements::resizeNodesAndElements(){
 int TwoDimMeshOfElements::addNewElement(std::string elemType, std::vector< std::vector< double > > nodeCoords,
                                         std::vector< int > globalNodeNumbs){
     
-    // WORK IN PROGRESS: I am trying to implement a global node number tracking system that is not quite working
-
     this->numbOfElements++;
     int elementNumb = this->numbOfElements;
     int newNodes = 0;
     for(int idx=0; idx < globalNodeNumbs.size(); idx++){
-        if(std::find(this->nodeNumbList.begin(),this->nodeNumbList.end(),
-            globalNodeNumbs[idx]) == this->nodeNumbList.end()){
+        if(this->getNodeIdx(globalNodeNumbs[idx]) == -1){
                 this->numbOfNodes++;
             }
     };
     this->resizeNodesAndElements();
+    // Need to add indexing of global nodes here from where it is in `addExistingElement`
 
     if (nodeCoords.size() == 4) {
         if (elemType == "melosh") {
@@ -88,7 +86,12 @@ void TwoDimMeshOfElements::setAllIsoThermCond(float isoThermCond){
 };
 
 int TwoDimMeshOfElements::getNodeIdx(int globNodeNumb){
-    int globNodeIdx = std::find(this->nodeNumbList.begin(),this->nodeNumbList.end(),globNodeNumb)-this->nodeNumbList.begin();
+    
+    int globNodeIdx = -1;
+    if(std::find(this->nodeNumbList.begin(),this->nodeNumbList.end(),
+            globNodeNumb) != this->nodeNumbList.end()){
+        globNodeIdx = std::find(this->nodeNumbList.begin(),this->nodeNumbList.end(),globNodeNumb)-this->nodeNumbList.begin();
+    }
     return globNodeIdx;
 };
 
@@ -97,14 +100,31 @@ void TwoDimMeshOfElements::addExistingElement(int elementNumb, TwoDimThermalElem
     //TODO: Add error for global node list size not matching number of nodes on element
     //TODO: There should be more intrinsic setting of the number of nodes
 
-    //element tracking
+    //element tracking 
+    // TODO: need to allow for the assignment of arbitrary element numbers
     int elementIdx = elementNumb-1;
     element->setNodeGlobNumber(globalNodeNumbs);
     this->elementObjList[elementIdx] = element;
     this->globNodeOnElementMap[elementIdx] = globalNodeNumbs;
+    
+    
+    
+    // This should be moved to the calling function, it should not be separate from the list extension step
+    std::vector< int > newNodeIdx(0);
+    int nodeNumb;
     for(int idx=0; idx < 4; idx++){
-        this->nodeNumbList[this->numbOfNodes-(4-idx)] = globalNodeNumbs[idx];
+        nodeNumb = globalNodeNumbs[idx];
+        if(this->getNodeIdx(nodeNumb) == -1) {
+            newNodeIdx.push_back(idx);
+        }
     }
+    int numbNewNodes = newNodeIdx.size();
+    int idxTrans;
+    for(int idx=0; idx < numbNewNodes; idx++){
+        idxTrans = newNodeIdx[idx];
+        this->nodeNumbList[this->numbOfNodes-(numbNewNodes-idx)] = globalNodeNumbs[idxTrans];
+    }
+
 
     //node tracking
     std::vector< std::vector< double > > newNodeCoords = element->getNodeCoords();
@@ -112,7 +132,7 @@ void TwoDimMeshOfElements::addExistingElement(int elementNumb, TwoDimThermalElem
     int globNodeIdx;
     for(int locNodeIdx = 0; locNodeIdx < globalNodeNumbs.size(); locNodeIdx++) {
         globNodeNumb = globalNodeNumbs[locNodeIdx];
-        this->getNodeIdx(globNodeNumb);
+        globNodeIdx = this->getNodeIdx(globNodeNumb);
         this->nodeCoords[globNodeIdx] = newNodeCoords[locNodeIdx];
     };
 
@@ -173,7 +193,7 @@ std::vector< std::vector< double > > TwoDimMeshOfElements::getRawGlobStiffMatrix
             int globRowIdx = this->getNodeIdx(globNodeNumbs[locRowIdx]);
 
             for (int locColIdx=0; locColIdx < numbLocNodes; locColIdx++) {
-                int globColIdx = this->getNodeIdx(globNodeNumbs[locRowIdx]);
+                int globColIdx = this->getNodeIdx(globNodeNumbs[locColIdx]);
 
                 globStiff[globRowIdx][globColIdx] += locStiff[locRowIdx][locColIdx];
             };
@@ -197,7 +217,8 @@ std::vector< double > TwoDimMeshOfElements::getRawGlobLoadVect() {
         int numbLocNodes = globNodeNumbs.size();
 
         for (int locRowIdx=0; locRowIdx < numbLocNodes; locRowIdx++) {
-            int globRowIdx = globNodeNumbs[locRowIdx]-1;
+            // int globRowIdx = globNodeNumbs[locRowIdx]-1;
+            int globRowIdx = this->getNodeIdx(globNodeNumbs[locRowIdx]);
 
             globLoad[globRowIdx] += locLoads[locRowIdx];
         };
