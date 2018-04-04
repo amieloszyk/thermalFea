@@ -25,7 +25,35 @@ void printMatrix(std::vector< std::vector< double > > matrixToPrint) {
     std::cout << std::endl;
 };
 
+void printMatrix(std::vector< std::vector< int > > matrixToPrint) { 
+    // TODO: Move this to a more generally accesssible location
+
+    std::cout << "["  << std::endl;
+    for (int rowIdx=0; rowIdx < matrixToPrint.size(); rowIdx++) {
+        std::cout << "[";
+        for (int colIdx=0; colIdx < matrixToPrint[rowIdx].size(); colIdx++) {
+            std::cout << matrixToPrint[rowIdx][colIdx] << ", ";
+        };
+        std::cout << "],";
+        std::cout << std::endl;
+    };
+    std::cout << "]";
+    std::cout << std::endl;
+};
+
 void printMatrix(std::vector< double >  matrixToPrint) { 
+    // TODO: Move this to a more generally accesssible location
+
+    std::cout << "[";
+    for (int rowIdx=0; rowIdx < matrixToPrint.size(); rowIdx++) {
+        std::cout << matrixToPrint[rowIdx] << ", ";
+        std::cout << std::endl;
+    };
+    std::cout << "]";
+    std::cout << std::endl;
+};
+
+void printMatrix(std::vector< int >  matrixToPrint) { 
     // TODO: Move this to a more generally accesssible location
 
     std::cout << "[";
@@ -229,12 +257,11 @@ void threeElementMeshTest() {
             dummyNodeCoords[3][0] = xLeft;
             dummyNodeCoords[3][1] = yTop;
 
-            
-
-            TwoDimThermalElement *dummyElement = new XyLinearThermalMeloshElement();
-            dummyElement->setNodeCoords(dummyNodeCoords);
-            dummyElement->setIsoThermCond(isoThermCond);
-            dummyElement->setElemThick(thick);
+            // TwoDimThermalElement *dummyElement = new XyLinearThermalMeloshElement();
+            // dummyElement->setNodeCoords(dummyNodeCoords);
+            // dummyElement->setIsoThermCond(isoThermCond);
+            // dummyElement->setElemThick(thick);
+            // rectMesh.addExistingElement(elemCounter, dummyElement, dummyGlobNodeMap);
 
             // std::vector< int > dummyGlobElementMap(4);
             // Not fully generalized past one row
@@ -246,7 +273,6 @@ void threeElementMeshTest() {
             rectMesh.addNewElement("melosh",dummyNodeCoords,dummyGlobNodeMap);
             rectMesh.setElemThick(thick,elemCounter);
             rectMesh.setElemIsoThermCond(isoThermCond,elemCounter);
-            rectMesh.addExistingElement(elemCounter, dummyElement, dummyGlobNodeMap);
 
             xLeft += xStep;
         };
@@ -270,7 +296,6 @@ void threeElementMeshTest() {
     std::vector< double > solveLoadVect = rectMesh.getLoadVectToSolve();
     std::vector< double > calcNodeTemps = gaussianElimSolve(solveStiffMat,solveLoadVect);
     
-    // error here
     std::vector< std::vector< double > > rawStiffMat = rectMesh.getRawGlobStiffMatrix();
     std::vector< double > rawLoadVect = rectMesh.getRawGlobLoadVect();
 
@@ -289,6 +314,112 @@ void threeElementMeshTest() {
 };
 
 void nineElementMeshTest() {
+/*
+1- D patch test with a pretty unstructured mesh
+             4            7           11          13
+              +-----------+-----------+-----------+
+            <-|           |           |           |<-
+            <-|           |           |           |<-
+ 1000 W/m2  <-|     1     |     2     |     6     |<- 1000 W/m2
+            <-| k=10W/m-K | k=10W/m-K | k=10W/m-K |<-
+            <-|           |           |           |<-
+              +-----------+-----------+-----------+
+            <-| 3         |  8        | 5      14 |<-
+            <-|           |           |           |<-
+ 1000 W/m2  <-|     4     |     5     |     7     |<- 1000 W/m2
+            <-| k=10W/m-K | k=10W/m-K | k=10W/m-K |<-
+            <-|           |           |           |<-
+              +-----------+-----------+-----------+
+            <-| 2         |   9       | 12     15 |<-
+            <-|           |           |           |<-
+ 1000 W/m2  <-|     3     |     9     |     8     |<- 1000 W/m2
+            <-| k=10W/m-K | k=10W/m-K | k=10W/m-K |<-
+            <-|           |           |           |<-
+              +-----------+-----------+-----------+ 200K
+              1           10          6           16
+*/
+
+std::vector< std::vector< int >  > nodeToElemMap(9,std::vector< int >(4,0));
+nodeToElemMap[0][0] = 3;
+nodeToElemMap[0][1] = 8;
+nodeToElemMap[0][2] = 7;
+nodeToElemMap[0][3] = 4;
+nodeToElemMap[1][0] = 8;
+nodeToElemMap[1][1] = 5;
+nodeToElemMap[1][2] = 11;
+nodeToElemMap[1][3] = 7;
+nodeToElemMap[2][0] = 1;
+nodeToElemMap[2][1] = 10;
+nodeToElemMap[2][2] = 9;
+nodeToElemMap[2][3] = 2;
+nodeToElemMap[3][0] = 2;
+nodeToElemMap[3][1] = 9;
+nodeToElemMap[3][2] = 8;
+nodeToElemMap[3][3] = 3;
+nodeToElemMap[4][0] = 9;
+nodeToElemMap[4][1] = 12;
+nodeToElemMap[4][2] = 5;
+nodeToElemMap[4][3] = 8;
+nodeToElemMap[5][0] = 5;
+nodeToElemMap[5][1] = 14;
+nodeToElemMap[5][2] = 13;
+nodeToElemMap[5][3] = 11;
+nodeToElemMap[6][0] = 12;
+nodeToElemMap[6][1] = 15;
+nodeToElemMap[6][2] = 14;
+nodeToElemMap[6][3] = 5;
+nodeToElemMap[7][0] = 6;
+nodeToElemMap[7][1] = 16;
+nodeToElemMap[7][2] = 15;
+nodeToElemMap[7][3] = 12;
+nodeToElemMap[8][0] = 10;
+nodeToElemMap[8][1] = 6;
+nodeToElemMap[8][2] = 12;
+nodeToElemMap[8][3] = 9;
+
+double xStart = 0.0;
+double xEnd = 3.0;
+double xStep = 1.0;
+double yStart = 0.0;
+double yEnd = 3.0;
+double yStep = 1.0;
+
+std::vector< std::vector< double > > nodeCoords(16,std::vector< double >(2, 0.0));
+nodeCoords[0][0] = xStart;
+nodeCoords[0][1] = yStart;
+nodeCoords[1][0] = xStart;
+nodeCoords[1][1] = yStart+yStep;
+nodeCoords[2][0] = xStart;
+nodeCoords[2][1] = yStart+2.0*yStep;
+nodeCoords[3][0] = xStart;
+nodeCoords[3][1] = yEnd;
+nodeCoords[4][0] = xStart+2.0*xStep;
+nodeCoords[4][1] = yStart+2.0*yStep;
+nodeCoords[5][0] = xStart+2.0*xStep;
+nodeCoords[5][1] = yStart;
+nodeCoords[6][0] = xStart+xStep;
+nodeCoords[6][1] = yEnd;
+nodeCoords[7][0] = xStart+xStep;
+nodeCoords[7][1] = yStart+2.0*yStep;
+nodeCoords[8][0] = xStart+xStep;
+nodeCoords[8][1] = yStart+yStep;
+nodeCoords[9][0] = xStart+xStep;
+nodeCoords[9][1] = yStart;
+nodeCoords[10][0] = xStart+2.0*xStep;
+nodeCoords[10][1] = yEnd;
+nodeCoords[11][0] = xStart+2.0*xStep;
+nodeCoords[11][1] = yStart+yStep;
+nodeCoords[12][0] = xEnd;
+nodeCoords[12][1] = yEnd;
+nodeCoords[13][0] = xEnd;
+nodeCoords[13][1] = yStart+2.0*yStep;
+nodeCoords[14][0] = xEnd;
+nodeCoords[14][1] = yStart+yStep;
+nodeCoords[15][0] = xEnd;
+nodeCoords[15][1] = yStart;
+
+// printMatrix(nodeToElemMap);
+
 /*
     void elementOne = XyLinearThermalMeloshElement();
     elementOne->globalCoord[0] = {0.0,0.0};
@@ -461,4 +592,5 @@ void patchMain() {
     slideOneElementMeshTest();
     oneElementMeshTest();
     threeElementMeshTest();
+    nineElementMeshTest();
 };
