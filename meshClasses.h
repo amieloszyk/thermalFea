@@ -38,20 +38,20 @@ class TwoDimMeshOfElements {
         std::vector< std::vector< double > > getStiffMatToSolve();
         std::vector< double > getLoadVectToSolve();
         void addLocCoordLoadToSurf(int globSurfNumb, OneDimPoly locCoordPoly);
-        
+        void setElemThick(double thick, int elementNumb);
+        void setElemIsoThermCond(double isoThermCond, int elementNumb);
 
         // Implemented, not tested
         int addNewElement(std::string elemType, std::vector< std::vector< double > > nodeCoords,
                           std::vector< int > globalNodeNumbs);
         void resizeNodesAndElements();
         int getNodeIdx(int globNodeNumb);
+        void setFoundNodeVals(std::vector< double > foundNodeVals);
+        std::vector< double > getFoundNodeVals();
         
         // Unimplemented and untested
-        void setElemThick(float thick, int elementNumb);
-        void setElemIsoThermCond(float isoThermCond, int elementNumb);
-        void setAllThick(float thick);
-        void setAllIsoThermCond(float isoThermCond);
-
+        void setAllThick(double thick);
+        void setAllIsoThermCond(double isoThermCond);
         void setSurfaceFixedVals(int globSurfNumb, double nodeVal); // allow polynomials too
         int makeNewElemSet();
         int makeNewNodeSet();

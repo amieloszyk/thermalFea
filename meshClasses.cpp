@@ -65,21 +65,21 @@ int TwoDimMeshOfElements::addNewElement(std::string elemType, std::vector< std::
     return elementNumb;
 };
 
-void TwoDimMeshOfElements::setElemThick(float thick, int elementNumb){
+void TwoDimMeshOfElements::setElemThick(double thick, int elementNumb){
     this->elementObjList[elementNumb-1]->setElemThick(thick);
 };
 
-void TwoDimMeshOfElements::setAllThick(float thick){
+void TwoDimMeshOfElements::setAllThick(double thick){
     for(int elemNumb=1; elemNumb <= this->numbOfElements; elemNumb++){
         this->setElemThick(thick,elemNumb+1);
     };
 };
 
-void TwoDimMeshOfElements::setElemIsoThermCond(float isoThermCond, int elementNumb){
+void TwoDimMeshOfElements::setElemIsoThermCond(double isoThermCond, int elementNumb){
     this->elementObjList[elementNumb-1]->setIsoThermCond(isoThermCond);
 };
 
-void TwoDimMeshOfElements::setAllIsoThermCond(float isoThermCond){
+void TwoDimMeshOfElements::setAllIsoThermCond(double isoThermCond){
     for(int elemNumb=1; elemNumb <= this->numbOfElements; elemNumb++){
         this->setElemIsoThermCond(isoThermCond,elemNumb);
     };
@@ -275,4 +275,16 @@ std::vector< double > TwoDimMeshOfElements::getLoadVectToSolve() {
 
     return solveLoad;
 };
+
+void TwoDimMeshOfElements::setFoundNodeVals(std::vector< double > foundNodeVals){
+    for (int rowIdx=0; rowIdx < this->numbOfNodes; rowIdx++) {
+        if (this->nodeValSet[rowIdx] == 0) {
+            this->nodeVals[rowIdx] = foundNodeVals[rowIdx];
+        };
+    };
+};
+
+std::vector< double > TwoDimMeshOfElements::getFoundNodeVals(){
+    return this->nodeVals;
+}
 

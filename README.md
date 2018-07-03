@@ -14,6 +14,11 @@ Things to do:
     - [ ] Create isoparametric and triangular elements
     - [ ] Implement better loads interface
     - [ ] Implement better BC interface
+    - [ ] Implement global element numbering
+    - [ ] Implement node and element sets
+    - [ ] Implement temperature (state variable?) dependent thermal conductivity
+    - [ ] Implement method to get calculated heat fluxes from the mesh
+    
     - [ ] Create a gui
     - [ ] Create a build system
     - [ ] Create a user manual

@@ -339,252 +339,145 @@ void nineElementMeshTest() {
               1           10          6           16
 */
 
-std::vector< std::vector< int >  > nodeToElemMap(9,std::vector< int >(4,0));
-nodeToElemMap[0][0] = 3;
-nodeToElemMap[0][1] = 8;
-nodeToElemMap[0][2] = 7;
-nodeToElemMap[0][3] = 4;
-nodeToElemMap[1][0] = 8;
-nodeToElemMap[1][1] = 5;
-nodeToElemMap[1][2] = 11;
-nodeToElemMap[1][3] = 7;
-nodeToElemMap[2][0] = 1;
-nodeToElemMap[2][1] = 10;
-nodeToElemMap[2][2] = 9;
-nodeToElemMap[2][3] = 2;
-nodeToElemMap[3][0] = 2;
-nodeToElemMap[3][1] = 9;
-nodeToElemMap[3][2] = 8;
-nodeToElemMap[3][3] = 3;
-nodeToElemMap[4][0] = 9;
-nodeToElemMap[4][1] = 12;
-nodeToElemMap[4][2] = 5;
-nodeToElemMap[4][3] = 8;
-nodeToElemMap[5][0] = 5;
-nodeToElemMap[5][1] = 14;
-nodeToElemMap[5][2] = 13;
-nodeToElemMap[5][3] = 11;
-nodeToElemMap[6][0] = 12;
-nodeToElemMap[6][1] = 15;
-nodeToElemMap[6][2] = 14;
-nodeToElemMap[6][3] = 5;
-nodeToElemMap[7][0] = 6;
-nodeToElemMap[7][1] = 16;
-nodeToElemMap[7][2] = 15;
-nodeToElemMap[7][3] = 12;
-nodeToElemMap[8][0] = 10;
-nodeToElemMap[8][1] = 6;
-nodeToElemMap[8][2] = 12;
-nodeToElemMap[8][3] = 9;
+    int numbElement = 9;
+    int numbNode = 16;
 
-double xStart = 0.0;
-double xEnd = 3.0;
-double xStep = 1.0;
-double yStart = 0.0;
-double yEnd = 3.0;
-double yStep = 1.0;
+    std::vector< std::vector< int >  > nodeToElemMap(9,std::vector< int >(4,0));
+    nodeToElemMap[0][0] = 3;
+    nodeToElemMap[0][1] = 8;
+    nodeToElemMap[0][2] = 7;
+    nodeToElemMap[0][3] = 4;
+    nodeToElemMap[1][0] = 8;
+    nodeToElemMap[1][1] = 5;
+    nodeToElemMap[1][2] = 11;
+    nodeToElemMap[1][3] = 7;
+    nodeToElemMap[2][0] = 1;
+    nodeToElemMap[2][1] = 10;
+    nodeToElemMap[2][2] = 9;
+    nodeToElemMap[2][3] = 2;
+    nodeToElemMap[3][0] = 2;
+    nodeToElemMap[3][1] = 9;
+    nodeToElemMap[3][2] = 8;
+    nodeToElemMap[3][3] = 3;
+    nodeToElemMap[4][0] = 9;
+    nodeToElemMap[4][1] = 12;
+    nodeToElemMap[4][2] = 5;
+    nodeToElemMap[4][3] = 8;
+    nodeToElemMap[5][0] = 5;
+    nodeToElemMap[5][1] = 14;
+    nodeToElemMap[5][2] = 13;
+    nodeToElemMap[5][3] = 11;
+    nodeToElemMap[6][0] = 12;
+    nodeToElemMap[6][1] = 15;
+    nodeToElemMap[6][2] = 14;
+    nodeToElemMap[6][3] = 5;
+    nodeToElemMap[7][0] = 6;
+    nodeToElemMap[7][1] = 16;
+    nodeToElemMap[7][2] = 15;
+    nodeToElemMap[7][3] = 12;
+    nodeToElemMap[8][0] = 10;
+    nodeToElemMap[8][1] = 6;
+    nodeToElemMap[8][2] = 12;
+    nodeToElemMap[8][3] = 9;
 
-std::vector< std::vector< double > > nodeCoords(16,std::vector< double >(2, 0.0));
-nodeCoords[0][0] = xStart;
-nodeCoords[0][1] = yStart;
-nodeCoords[1][0] = xStart;
-nodeCoords[1][1] = yStart+yStep;
-nodeCoords[2][0] = xStart;
-nodeCoords[2][1] = yStart+2.0*yStep;
-nodeCoords[3][0] = xStart;
-nodeCoords[3][1] = yEnd;
-nodeCoords[4][0] = xStart+2.0*xStep;
-nodeCoords[4][1] = yStart+2.0*yStep;
-nodeCoords[5][0] = xStart+2.0*xStep;
-nodeCoords[5][1] = yStart;
-nodeCoords[6][0] = xStart+xStep;
-nodeCoords[6][1] = yEnd;
-nodeCoords[7][0] = xStart+xStep;
-nodeCoords[7][1] = yStart+2.0*yStep;
-nodeCoords[8][0] = xStart+xStep;
-nodeCoords[8][1] = yStart+yStep;
-nodeCoords[9][0] = xStart+xStep;
-nodeCoords[9][1] = yStart;
-nodeCoords[10][0] = xStart+2.0*xStep;
-nodeCoords[10][1] = yEnd;
-nodeCoords[11][0] = xStart+2.0*xStep;
-nodeCoords[11][1] = yStart+yStep;
-nodeCoords[12][0] = xEnd;
-nodeCoords[12][1] = yEnd;
-nodeCoords[13][0] = xEnd;
-nodeCoords[13][1] = yStart+2.0*yStep;
-nodeCoords[14][0] = xEnd;
-nodeCoords[14][1] = yStart+yStep;
-nodeCoords[15][0] = xEnd;
-nodeCoords[15][1] = yStart;
+    double xStart = 0.0;
+    double xEnd = 3.0;
+    double xStep = 1.0;
+    double yStart = 0.0;
+    double yEnd = 3.0;
+    double yStep = 1.0;
 
-// printMatrix(nodeToElemMap);
-
-/*
-    void elementOne = XyLinearThermalMeloshElement();
-    elementOne->globalCoord[0] = {0.0,0.0};
-    elementOne->globalCoord[1] = {1.0,0.0};
-    elementOne->globalCoord[2] = {1.0,1.0};
-    elementOne->globalCoord[3] = {0.0,1.0};
-    elementOne->surfFlux[0] = 0.0;
-    elementOne.setLocNodeTemp(0, 100.0);
-    elementOne.setLocNodeTemp(3, 100.0);
-    elementOne.setIsoThemCond(10.0);
-    elementOne.setGlobalNodeNumb(1,1);
-    elementOne.setGlobalNodeNumb(2,2);
-    elementOne.setGlobalNodeNumb(3,6);
-    elementOne.setGlobalNodeNumb(4,5);
-
-    void elementTwo = XyLinearThermalMeloshElement();
-    elementTwo->globalCoord[0] = {1.0,0.0};
-    elementTwo->globalCoord[1] = {2.0,0.0};
-    elementTwo->globalCoord[2] = {2.0,1.0};
-    elementTwo->globalCoord[3] = {1.0,1.0};
-    elementTwo->surfFlux[0] = 0.0;
-    elementTwo.setIsoThemCond(10.0);
-    elementTwo.setGlobalNodeNumb(1,2);
-    elementTwo.setGlobalNodeNumb(2,3);
-    elementTwo.setGlobalNodeNumb(3,7);
-    elementTwo.setGlobalNodeNumb(4,6);
-
-    void elementThree = XyLinearThermalMeloshElement();
-    elementThree->globalCoord[0] = {2.0,0.0};
-    elementThree->globalCoord[1] = {3.0,0.0};
-    elementThree->globalCoord[2] = {3.0,1.0};
-    elementThree->globalCoord[3] = {2.0,1.0};
-    elementThree->surfFlux[0] = 0.0;
-    elementThree->surfFlux[1] = -1000.0;
-    elementThree.setIsoThemCond(10.0);
-    elementThree.setGlobalNodeNumb(1,3);
-    elementThree.setGlobalNodeNumb(2,4);
-    elementThree.setGlobalNodeNumb(3,8);
-    elementThree.setGlobalNodeNumb(4,7);
-
-    void elementFour = XyLinearThermalMeloshElement();
-    elementFour->globalCoord[0] = {0.0,1.0};
-    elementFour->globalCoord[1] = {1.0,1.0};
-    elementFour->globalCoord[2] = {1.0,2.0};
-    elementFour->globalCoord[3] = {0.0,2.0};
-    elementFour.setLocNodeTemp(0, 100.0);
-    elementFour.setLocNodeTemp(3, 100.0);
-    elementFour.setIsoThemCond(10.0);
-    elementFour.setGlobalNodeNumb(1,5);
-    elementFour.setGlobalNodeNumb(2,6);
-    elementFour.setGlobalNodeNumb(3,10);
-    elementFour.setGlobalNodeNumb(4,9);
-
-    void elementFive = XyLinearThermalMeloshElement();
-    elementFive->globalCoord[0] = {1.0,1.0};
-    elementFive->globalCoord[1] = {2.0,1.0};
-    elementFive->globalCoord[2] = {2.0,2.0};
-    elementFive->globalCoord[3] = {1.0,2.0};
-    elementFive.setIsoThemCond(810.0;
-    elementFive.setGlobalNodeNumb(1,6);
-    elementFive.setGlobalNodeNumb(2,7);
-    elementFive.setGlobalNodeNumb(3,11);
-    elementFive.setGlobalNodeNumb(4,12);
-
-    void elementSix = XyLinearThermalMeloshElement();
-    elementSix->globalCoord[0] = {2.0,1.0};
-    elementSix->globalCoord[1] = {3.0,1.0};
-    elementSix->globalCoord[2] = {3.0,2.0};
-    elementSix->globalCoord[3] = {2.0,2.0};
-    elementSix->surfFlux[1] = -1000.0;
-    elementSix.setIsoThemCond(10.0);
-    elementSix.setGlobalNodeNumb(1,7);
-    elementSix.setGlobalNodeNumb(2,8);
-    elementSix.setGlobalNodeNumb(3,12);
-    elementSix.setGlobalNodeNumb(4,11);
-
-    void elementSeven = XyLinearThermalMeloshElement();
-    elementSeven->globalCoord[0] = {0.0,2.0};
-    elementSeven->globalCoord[1] = {1.0,2.0};
-    elementSeven->globalCoord[2] = {1.0,3.0};
-    elementSeven->globalCoord[3] = {0.0,3.0};
-    elementSeven->surfFlux[2] = 0.0;
-    elementSeven.setLocNodeTemp(0, 100.0);
-    elementSeven.setLocNodeTemp(3, 100.0);
-    elementSeven.setIsoThemCond(10.0);
-    elementSeven.setGlobalNodeNumb(1,9);
-    elementSeven.setGlobalNodeNumb(2,10);
-    elementSeven.setGlobalNodeNumb(3,14);
-    elementSeven.setGlobalNodeNumb(4,13);
-
-    void elementEight = XyLinearThermalMeloshElement();
-    elementEight->globalCoord[0] = {1.0,2.0};
-    elementEight->globalCoord[1] = {2.0,2.0};
-    elementEight->globalCoord[2] = {2.0,3.0};
-    elementEight->globalCoord[3] = {1.0,3.0};
-    elementEight->surfFlux[2] = 0.0;
-    elementEight.setIsoThemCond(10.0);
-    elementEight.setGlobalNodeNumb(1,10);
-    elementEight.setGlobalNodeNumb(2,11);
-    elementEight.setGlobalNodeNumb(3,15);
-    elementEight.setGlobalNodeNumb(4,14);
-
-    void elementNine = XyLinearThermalMeloshElement();
-    elementNine->globalCoord[0] = {2.0,2.0};
-    elementNine->globalCoord[1] = {3.0,2.0};
-    elementNine->globalCoord[2] = {3.0,3.0};
-    elementNine->globalCoord[3] = {2.0,3.0};
-    elementNine->surfFlux[1] = -1000.0;
-    elementNine->surfFlux[2] = 0.0;
-    elementNine.setIsoThemCond(10.0);
-    elementNine.setGlobalNodeNumb(1,11);
-    elementNine.setGlobalNodeNumb(2,12);
-    elementNine.setGlobalNodeNumb(3,16);
-    elementNine.setGlobalNodeNumb(4,15);
-
+    std::vector< std::vector< double > > nodeCoords(16,std::vector< double >(2, 0.0));
+    nodeCoords[0][0] = xStart;
+    nodeCoords[0][1] = yStart;
+    nodeCoords[1][0] = xStart;
+    nodeCoords[1][1] = yStart+yStep;
+    nodeCoords[2][0] = xStart;
+    nodeCoords[2][1] = yStart+2.0*yStep;
+    nodeCoords[3][0] = xStart;
+    nodeCoords[3][1] = yEnd;
+    nodeCoords[4][0] = xStart+2.0*xStep;
+    nodeCoords[4][1] = yStart+2.0*yStep;
+    nodeCoords[5][0] = xStart+2.0*xStep;
+    nodeCoords[5][1] = yStart;
+    nodeCoords[6][0] = xStart+xStep;
+    nodeCoords[6][1] = yEnd;
+    nodeCoords[7][0] = xStart+xStep;
+    nodeCoords[7][1] = yStart+2.0*yStep;
+    nodeCoords[8][0] = xStart+xStep;
+    nodeCoords[8][1] = yStart+yStep;
+    nodeCoords[9][0] = xStart+xStep;
+    nodeCoords[9][1] = yStart;
+    nodeCoords[10][0] = xStart+2.0*xStep;
+    nodeCoords[10][1] = yEnd;
+    nodeCoords[11][0] = xStart+2.0*xStep;
+    nodeCoords[11][1] = yStart+yStep;
+    nodeCoords[12][0] = xEnd;
+    nodeCoords[12][1] = yEnd;
+    nodeCoords[13][0] = xEnd;
+    nodeCoords[13][1] = yStart+2.0*yStep;
+    nodeCoords[14][0] = xEnd;
+    nodeCoords[14][1] = yStart+yStep;
+    nodeCoords[15][0] = xEnd;
+    nodeCoords[15][1] = yStart;
 
     TwoDimMeshOfElements patchMesh;
-    //elementId = patchMesh.addElement(elementObj,nodeOneGlobNumb,nodeTwoGlobNumb,nodeThreeGlobNumb,nodeFourGlobNumb)
-    int elemOneId = patchMesh.addExistingElement(elementOne,{1,2,5,6});
-    int elemTwoId = patchMesh.addExistingElement(elementTwo,{2,3,7,6});
-    int elemThreeId = patchMesh.addExistingElement(elementThree,{3,4,8,7});
-    int elemFourId = patchMesh.addExistingElement(elementFour,{5,6,10,9});
-    int elemFiveId = patchMesh.addExistingElement(elementFive,{6,7,11,10});
-    int elemSixId = patchMesh.addExistingElement(elementSix,{7,8,12,11});
-    int elemSevenId = patchMesh.addExistingElement(elementSeven,{9,10,14,13});
-    int elemEightId = patchMesh.addExistingElement(elementEight,{10,11,15,14});
-    int elemNineId = patchMesh.addExistingElement(elementNine,{11,12,16,15});
 
-    //patchMesh.makeSurf(surfId)
-    int surfOneId = patchMesh.makeNewSurf();
-    //patchMesh.addLocSurfToMesh(surfId,elemId,surfId)
-    patchMesh.addLocSurfToMesh(surfOneId,elemOneId,1);
-    patchMesh.addLocSurfToMesh(surfOneId,elemTwoId,1);
-    patchMesh.addLocSurfToMesh(surfOneId,elemThreeId,1);
+    std::vector< std::vector< double > > dummyNodeCoords(4,std::vector< double >(2,0.0));
+    std::vector< int > dummyNodeNumb(4);
+    int dummyNodeIdx;
+    double thick = 1.0;
+    double isoThermCond = 10.0;
+    for (int elemIdx = 0; elemIdx < numbElement; elemIdx++) {
+        for (int locNode = 0; locNode < 4; locNode++){
+            dummyNodeIdx = nodeToElemMap[elemIdx][locNode]-1;
+            dummyNodeNumb[locNode] = nodeToElemMap[elemIdx][locNode];
+            dummyNodeCoords[locNode][0] = nodeCoords[dummyNodeIdx][0];
+            dummyNodeCoords[locNode][1] = nodeCoords[dummyNodeIdx][1];
+        };
+        
+        patchMesh.addNewElement("melosh",dummyNodeCoords,dummyNodeNumb);
+        patchMesh.setElemThick(thick,elemIdx+1);
+        patchMesh.setElemIsoThermCond(isoThermCond,elemIdx+1);
+    };
 
-    int surfTwoId = patchMesh.makeSurf();
-    patchMesh.addLocSurfToMesh(surfTwoId,elemThreeId,2);
-    patchMesh.addLocSurfToMesh(surfTwoId,elemFourId,2);
-    patchMesh.addLocSurfToMesh(surfTwoId,elemFiveId,2);
+    int rightSurfIdx = patchMesh.makeNewSurf();
+    patchMesh.addLocSurfToMesh(rightSurfIdx,6,2);
+    patchMesh.addLocSurfToMesh(rightSurfIdx,7,2);
+    patchMesh.addLocSurfToMesh(rightSurfIdx,8,2);
+    patchMesh.setScalarSurfFlux(rightSurfIdx,1000.0);
 
-    int surfThreeId = patchMesh.makeSurf();
-    patchMesh.addLocSurfToMesh(surfThreeId,elemSevenId,3);
-    patchMesh.addLocSurfToMesh(surfThreeId,elemEightId,3);
-    patchMesh.addLocSurfToMesh(surfThreeId,elemNineId,3);
+    int leftSurfIdx = patchMesh.makeNewSurf();
+    std::cout << "here 1" << std::endl;
+    patchMesh.addLocSurfToMesh(leftSurfIdx,1,4);
+    patchMesh.addLocSurfToMesh(leftSurfIdx,4,4);
+    patchMesh.addLocSurfToMesh(leftSurfIdx,3,4);
+    std::cout << "here 2" << std::endl;
+    patchMesh.setScalarSurfFlux(leftSurfIdx,-1000.0);
+    std::cout << "here 3" << std::endl;
 
-    int surfFourId = patchMesh.makeSurf();
-    patchMesh.addLocSurfToMesh(surfFourId,elemOneId,4);
-    patchMesh.addLocSurfToMesh(surfFourId,elemFourId,4);
-    patchMesh.addLocSurfToMesh(surfFourId,elemSevenId,4);
+    std::vector< int > boundaryNodes(1);
+    boundaryNodes[0] = 1;
+    std::vector< double > fixedNodeVal(1,100.0);
+    patchMesh.setFixedNodeVals(boundaryNodes, fixedNodeVal);
 
-    //patchMesh.setFlux(int surfId, float fluxVal)
-    patchMesh.setSurfFlux(surfOneId, 0.0);
-    patchMesh.setSurfFlux(surfTwoId, -1000.0);
-    patchMesh.setSurfFlux(surfThreeId, 0.0);
+    std::vector< std::vector< double > > solveStiffMat;
+    std::vector< double > solveLoadVect;
+    solveStiffMat = patchMesh.getStiffMatToSolve();
+    solveLoadVect = patchMesh.getLoadVectToSolve();
 
-    //patchMesh.setSurfTemp(int surfId, float tempVal)
-    patchMesh.setSurfTemp(surfFourId, 100.0);
+    std::vector< double > calcNodeTemps;
+    calcNodeTemps = gaussianElimSolve(solveStiffMat,solveLoadVect);
+    patchMesh.setFoundNodeVals(calcNodeTemps);
+    std::vector< double > nodeTemps;
+    nodeTemps = patchMesh.getFoundNodeVals();
 
-    // have these return values, but set internal matrices
-    std::vector<std::vector<double>> globStiffMatrix = patchMesh.getStiffMatrix();
-    std::vector<double> globReactVect = patchMesh.getLoadVect();
-    std::vector<double> globNodeVals = patchMesh.solveNodeVals();
-
-
-    */
+    std::cout << "Solvable K-Matrix:" << std::endl;
+    printMatrix(solveStiffMat);
+    std::cout << "Solvable Load Vector:" << std::endl;
+    printMatrix(solveLoadVect);
+    std::cout << "Calculated, Set, and Returned Node Values:" << std::endl;
+    printMatrix(nodeTemps);
 };
 
 
