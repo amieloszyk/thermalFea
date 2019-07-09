@@ -1,7 +1,8 @@
 // #include "testPolyArray.cpp"
-// #include "testElementClasses.cpp"
+//#include "testElementClasses.cpp"
 #include "oneDimPatchTest.cpp"
 
 int main() {
-    patchMain();
+    //testElementMain(); // testElementClasses.cpp
+    patchMain(); //oneDimPatchTest.cpp
 }

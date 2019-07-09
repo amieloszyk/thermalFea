@@ -42,6 +42,7 @@ class TwoDimMeshOfElements {
         void setElemIsoThermCond(double isoThermCond, int elementNumb);
 
         // Implemented, not tested
+        // TODO: replace elementType string with an enum
         int addNewElement(std::string elemType, std::vector< std::vector< double > > nodeCoords,
                           std::vector< int > globalNodeNumbs);
         void resizeNodesAndElements();

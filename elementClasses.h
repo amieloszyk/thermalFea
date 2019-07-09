@@ -82,13 +82,13 @@ class TwoDimThermalElement : public ThermalElement {
 class XyLinearThermalMeloshElement : public TwoDimThermalElement{
 /*
   (x4,y4)      S3        (x3,y3)
-     O----------|----------O
+     4----------|----------3
      |          |          |       /\ y
      |          | (0,0)    |       |
  S4 -|----------|----------|-  S2 -|--> x
      |          |          |
      |          |          |
-     O----------|----------O
+     1----------|----------2
   (x1,y1)      S1        (x2,y2)
 
 DOF:
@@ -136,6 +136,71 @@ DOF:
         // Not implemented
         void setBodyLoad(TwoDimPoly loadShape);
         std::vector<double> getBodyLoadVect();
+        
+};
+
+
+class XyCstThermalTriElement : public TwoDimThermalElement{
+/*
+Constant strain triangle with natural coordinates
+        (x3,y3)
+        (0,0,1)
+          3
+         / \
+        /   \
+    S3 /     \ S2
+      /       \
+     /         \
+    1-----------2
+(x1,y1)  S1    (x2,y2)
+(1,0,0)        (0,1,0)
+
+DOF:
+    - Temperature
+*/
+
+    private:
+
+        double elemThickness;
+        std::vector< std::vector< double > > condMatrix;
+        XyShapeFuncVector shapeFuncVect;
+        bool loadOnSurf[3];
+        std::vector<OneDimPoly> locSurfLoads;
+        bool loadOnBody;
+        PolyArray bodyLoad;
+        std::vector< std::vector< double > > natTransMatrix;
+        std::vector< std::vector< double > > invNatTransMatrix;
+        double area;
+
+    public: //TODO: Some of these ought to be private
+
+        XyCstThermalTriElement(); 
+        
+        // Implemented and tested
+        
+
+        // Implemented not tested
+        void checkNodeCoords();
+        void setLocNodeCoords();
+        std::vector< std::vector< double > > getLocNodeCoords();
+        void setNodeCoords(std::vector< std::vector< double > > nodeGlobCoords);
+        void setElemThick(double elemThick);
+        double getElemThick();
+        void setMatMatrix(std::vector< std::vector< double > > thermCondMatrix);
+        std::vector< std::vector< double > > getMatMatrix();
+        void setIsoThermCond(double thermCond);
+        void setShapeFuncs();
+        XyShapeFuncVector getShapeFuncs();
+        PolyArray getStiffIntegrand();
+        std::vector< std::vector< double > > getStiffnessMatrix();
+
+        // Not implemented
+        
+        //void setSurfaceLoadInLocCoords(int surfNumb, OneDimPoly locLoadShape);
+        //std::vector<double> getLoadOnSurf(int surfNumb);
+        //std::vector<double> getTotalLoadVect();
+        //void setBodyLoad(TwoDimPoly loadShape);
+        //std::vector<double> getBodyLoadVect();
         
 };
 

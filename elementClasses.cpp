@@ -1,5 +1,7 @@
 #include "elementClasses.h"
 
+#include <iostream>
+
 ThermalElement::ThermalElement() {
     this->numbOfNodes = 0;
 };
@@ -62,6 +64,20 @@ std::vector< std::vector< double > > ThermalElement::getNodeCoords() {
 
 
 
+/*
+TwoDimThermalElement needs to get some stuff moved into it that is currently 
+in its derived classes. These include:
+    * Initialization and setting of the thermal conductivity
+    * Getting the node coordinates
+    * Setting the thickness
+    * Getting the shape functions
+    * Setting the surface and body loads
+    * Finding the nodal loads and stiffness (only if the integration is 
+        handled by a call to a pointer defined by the derived class)
+*/
+
+
+
 
 
 
@@ -96,10 +112,15 @@ XyLinearThermalMeloshElement::XyLinearThermalMeloshElement()
 
 void XyLinearThermalMeloshElement::checkNodeCoords() {
 
+    if (this->nodeGlobCoordVect.size() != 4) {
+        //TODO: Make this a real exception
+        throw "Need to define 4 nodes";
+    };
+
     if (this->nodeGlobCoordVect[0].size() != 2) {
         //TODO: Make this a real exception
         throw "Node coordinates must be 2-D";
-    }
+    };
 
     if (this->nodeGlobCoordVect[0][0] != nodeGlobCoordVect[3][0]) {
         //TODO: Make this a real exception
@@ -252,7 +273,7 @@ XyShapeFuncVector XyLinearThermalMeloshElement::getShapeFuncs() {
 };
 
 PolyArray XyLinearThermalMeloshElement::getStiffIntegrand() {
-    // trans( grad( shapeFunc ) ) * thick * MatMatrix * shapeFunc
+    // trans( grad( shapeFunc ) ) * thick * MatMatrix * grad( shapeFunc )
 
     PolyArray gradShapeFuncs = shapeFuncVect.getGrad();
     
@@ -360,4 +381,204 @@ std::vector<double> XyLinearThermalMeloshElement::getTotalLoadVect() {
     // TODO: need to add body loads
 
     return totalLoad;
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+XyCstThermalTriElement::XyCstThermalTriElement() 
+:condMatrix (2,std::vector< double >(2,0.0) )
+{
+    this->numbOfNodes = 3;
+    this->numbOfSurfs = numbOfNodes;
+    this->degreesOfFreedom = 1;
+    this->loadOnSurf[0] = false;
+    this->loadOnSurf[1] = false;
+    this->loadOnSurf[2] = false;
+    this->loadOnBody = false;
+    
+    std::vector<double> zeroCoeff;
+    zeroCoeff.push_back(0.0);
+    for(int idx = 0; idx < numbOfSurfs; ++idx) {
+        this->locSurfLoads.push_back(zeroCoeff);
+    };
+};
+
+void XyCstThermalTriElement::checkNodeCoords() {
+
+    // This doesn't actually check coordinates
+
+    if (this->nodeGlobCoordVect.size() != 3) {
+        //TODO: Make this a real exception
+        throw "Need to define 3 nodes";
+    };
+
+    if (this->nodeGlobCoordVect[0].size() != 2) {
+        //TODO: Make this a real exception
+        throw "Node coordinates must be 2-D";
+    };
+};
+
+void XyCstThermalTriElement::setLocNodeCoords() {
+    
+    std::vector< double > coordVect(3);
+    coordVect[0] = 1.0;
+    coordVect[1] = 0.0;
+    coordVect[2] = 0.0;
+    this->nodeLocCoordVect.push_back(coordVect);
+    coordVect[0] = 0.0;
+    coordVect[1] = 1.0;
+    coordVect[2] = 0.0;
+    this->nodeLocCoordVect.push_back(coordVect);
+    coordVect[0] = 0.0;
+    coordVect[1] = 0.0;
+    coordVect[2] = 1.0;
+    this->nodeLocCoordVect.push_back(coordVect);
+
+    coordVect[0] = 1.0;
+    coordVect[1] = 1.0;
+    coordVect[2] = 1.0;
+    this->natTransMatrix.push_back(coordVect);
+    coordVect[0] = nodeGlobCoordVect[0][0];
+    coordVect[1] = nodeGlobCoordVect[1][0];
+    coordVect[2] = nodeGlobCoordVect[2][0];
+    this->natTransMatrix.push_back(coordVect);
+    coordVect[0] = nodeGlobCoordVect[0][1];
+    coordVect[1] = nodeGlobCoordVect[1][1];
+    coordVect[2] = nodeGlobCoordVect[2][1];
+    this->natTransMatrix.push_back(coordVect);
+
+    this->area = (nodeGlobCoordVect[1][0]-nodeGlobCoordVect[0][0])*(nodeGlobCoordVect[2][1]-nodeGlobCoordVect[0][1])
+                 -(nodeGlobCoordVect[2][0]-nodeGlobCoordVect[0][0])*(nodeGlobCoordVect[1][1]-nodeGlobCoordVect[0][1]);
+    this->area /= 2.0;
+
+    coordVect[0] = nodeGlobCoordVect[1][0]*nodeGlobCoordVect[2][1]-nodeGlobCoordVect[2][0]*nodeGlobCoordVect[1][1];
+    coordVect[1] = nodeGlobCoordVect[1][1]-nodeGlobCoordVect[2][1];
+    coordVect[2] = nodeGlobCoordVect[2][0]-nodeGlobCoordVect[1][0];
+    invNatTransMatrix.push_back(coordVect);
+    coordVect[0] = nodeGlobCoordVect[2][0]*nodeGlobCoordVect[0][1]-nodeGlobCoordVect[0][0]*nodeGlobCoordVect[2][1];
+    coordVect[1] = nodeGlobCoordVect[2][1]-nodeGlobCoordVect[0][1];
+    coordVect[2] = nodeGlobCoordVect[0][0]-nodeGlobCoordVect[2][0];
+    invNatTransMatrix.push_back(coordVect);
+    coordVect[0] = nodeGlobCoordVect[0][0]*nodeGlobCoordVect[1][1]-nodeGlobCoordVect[1][0]*nodeGlobCoordVect[0][1];
+    coordVect[1] = nodeGlobCoordVect[0][1]-nodeGlobCoordVect[1][1];
+    coordVect[2] = nodeGlobCoordVect[1][0]-nodeGlobCoordVect[0][0];
+    invNatTransMatrix.push_back(coordVect);
+    for (int idx=0; idx < 3; idx++){
+        for (int jdx=0; jdx < 3; jdx++){
+            invNatTransMatrix[idx][jdx] /= 2.0*this->area;
+        };
+    };
+    
+    
+};
+
+std::vector< std::vector< double > > XyCstThermalTriElement::getLocNodeCoords() {
+    return this->nodeLocCoordVect;
+};
+
+void XyCstThermalTriElement::setNodeCoords(std::vector< std::vector< double > > globalNodeCoords){
+    ThermalElement::setNodeCoordVect(globalNodeCoords);
+    this->checkNodeCoords();
+    this->setLocNodeCoords();
+    this->setShapeFuncs();
+};
+
+void XyCstThermalTriElement::setElemThick(double elemThick) {
+    // This should be moved to a more generic 2-D class
+
+    this->elemThickness = elemThick;
+};
+
+double XyCstThermalTriElement::getElemThick() {
+    // This should be moved to a more generic 2-D class
+
+    return this->elemThickness;
+};
+
+void XyCstThermalTriElement::setMatMatrix(std::vector< std::vector< double > > thermCondMatrix) {
+    if (thermCondMatrix.size() != 2) {
+        //TODO: Make this a real exception
+        throw "Thermal conductivity matrix must be 2x2";
+    }
+    else if (thermCondMatrix[0].size() != 2) {
+        //TODO: Make this a real exception
+        throw "Thermal conductivity matrix must be 2x2";
+    };
+
+    this->condMatrix = thermCondMatrix;
+};
+
+std::vector< std::vector< double > > XyCstThermalTriElement::getMatMatrix() {
+    return this->condMatrix;
+};
+
+void XyCstThermalTriElement::setIsoThermCond(double thermCond) {
+    this->condMatrix[0][0] = thermCond;
+    this->condMatrix[0][1] = 0.0;
+    this->condMatrix[1][0] = 0.0;
+    this->condMatrix[1][1] = thermCond;
+};
+
+void XyCstThermalTriElement::setShapeFuncs() {
+    
+    std::vector< TwoDimPoly > polyRow;
+
+    for (int idx = 0; idx < 3; idx++){
+        std::vector< double > oneDimCoeffVect(2);
+        std::vector< OneDimPoly > oneDimPolyVect;
+        
+        oneDimCoeffVect[0] = this->invNatTransMatrix[idx][0];
+        oneDimCoeffVect[1] = this->invNatTransMatrix[idx][1];
+        OneDimPoly dummyOneDimPoly1(oneDimCoeffVect);
+        oneDimPolyVect.push_back(dummyOneDimPoly1);
+        
+        oneDimCoeffVect[0] = this->invNatTransMatrix[idx][2];
+        oneDimCoeffVect[1] = 0.0;
+        OneDimPoly dummyOneDimPoly2(oneDimCoeffVect);
+        oneDimPolyVect.push_back(dummyOneDimPoly2);
+        
+        polyRow.push_back(TwoDimPoly(oneDimPolyVect));
+    };
+
+    this->shapeFuncVect.addRow(polyRow);
+
+};
+
+XyShapeFuncVector XyCstThermalTriElement::getShapeFuncs() {
+    return this->shapeFuncVect;
+};
+
+PolyArray XyCstThermalTriElement::getStiffIntegrand() {
+    // trans( grad( shapeFunc ) ) * thick * MatMatrix * grad( shapeFunc )
+
+    PolyArray gradShapeFuncs = shapeFuncVect.getGrad();
+    
+    PolyArray stiffIntegrand = gradShapeFuncs.transpose();
+    stiffIntegrand = stiffIntegrand.multScalar(this->elemThickness);
+    stiffIntegrand = stiffIntegrand.matMultScalarBehind(this->condMatrix);
+    std::vector<std::vector<double> > checkMat = stiffIntegrand.evalAt(0.0,0.0);
+    stiffIntegrand = stiffIntegrand.matMultPolyArray(gradShapeFuncs);
+
+    return stiffIntegrand;
+
+};
+
+std::vector< std::vector< double > > XyCstThermalTriElement::getStiffnessMatrix() {
+    
+    PolyArray stiffIntegrand = this->getStiffIntegrand();
+    stiffIntegrand = stiffIntegrand.multScalar(this->area); // This is the actual integration (there is no spatial dependence)
+    std::vector< std::vector< double > > stiffMatrix = stiffIntegrand.evalAt(0.0, 0.0); // Just retrieves the matrix entries (constants)
+    return stiffMatrix;
 };

@@ -251,8 +251,122 @@ void testXyLinearThermalMeloshElement() {
 
 };
 
+void testXyCstThermalTriElement(){
+
+    XyCstThermalTriElement testElem;
+    std::cout << "Test X-Y Thermal Melosh Element Class Functionality:" << std::endl;
+    std::cout << "----------------------------------------------------" << std::endl;
+
+    std::cout << "Number of Nodes -- Known: 3; Returned: " << testElem.getNumberOfNodes() << std::endl;
+
+    std::vector< double > dummyDoubVect(2);
+    std::vector< std::vector< double > > dummyDoubVectVect;
+    dummyDoubVect[0] = 1.0;
+    dummyDoubVect[1] = 0.0;
+    dummyDoubVectVect.push_back(dummyDoubVect);
+    dummyDoubVect[0] = 3.0;
+    dummyDoubVect[1] = 2.0;
+    dummyDoubVectVect.push_back(dummyDoubVect);
+    dummyDoubVect[0] = -1.0;
+    dummyDoubVect[1] = 1.0;
+    dummyDoubVectVect.push_back(dummyDoubVect);
+    dummyDoubVect[0] = -1.0;
+    dummyDoubVect[1] = 1.0;
+    dummyDoubVectVect.push_back(dummyDoubVect);
+
+    bool checkNumbThrow = false;
+    try{testElem.setNodeCoords(dummyDoubVectVect);}
+    catch (...) {checkNumbThrow = true;}
+    std::cout << "Test checkNodeCoords: "; 
+    if (checkNumbThrow == true) {
+        std::cout << "Caught! :)" << std::endl;
+    } 
+    else {
+        std::cout << "Missed! :(" << std::endl;
+    };
+
+    dummyDoubVectVect.clear();
+
+    dummyDoubVect[0] = 1.0;
+    dummyDoubVect[1] = 0.0;
+    dummyDoubVectVect.push_back(dummyDoubVect);
+    dummyDoubVect[0] = 3.0;
+    dummyDoubVect[1] = 2.0;
+    dummyDoubVectVect.push_back(dummyDoubVect);
+    dummyDoubVect[0] = -1.0;
+    dummyDoubVect[1] = 1.0;
+    dummyDoubVectVect.push_back(dummyDoubVect);
+    testElem.setNodeCoords(dummyDoubVectVect);
+    dummyDoubVectVect.clear();
+    dummyDoubVectVect = testElem.getNodeCoords();
+    std::cout << "Global node coords -- Given: {{1,0}, {3,2}, {-1,1}}; Returned: {";
+    for (int nodeIdx = 0; nodeIdx < 3; ++nodeIdx) {
+        std::cout << "{";
+        for(int coordIdx = 0; coordIdx < 2; ++coordIdx) {
+            std::cout << dummyDoubVectVect[nodeIdx][coordIdx] << ",";
+        }; 
+        std::cout << "}, ";
+    };
+    std::cout << "}" << std::endl;
+
+    dummyDoubVectVect.clear();
+    dummyDoubVectVect = testElem.getLocNodeCoords();
+    std::cout << "Node coords  (local, natural) -- Given: {{1.0, 0.0, 0.0}, {0.0, 1.0, 0.0}, {0.0, 0.0, 1.0}}; Returned: {";
+    for (int nodeIdx = 0; nodeIdx < 3; ++nodeIdx) {
+        std::cout << "{";
+        for(int coordIdx = 0; coordIdx < 3; ++coordIdx) {
+            std::cout << dummyDoubVectVect[nodeIdx][coordIdx] << ",";
+        }; 
+        std::cout << "}, ";
+    };
+    std::cout << "}" << std::endl;
+
+    testElem.setElemThick(1.3);
+    std::cout << "Thickness -- Known: 1.3; Returned: " << testElem.getElemThick() << std::endl;
+
+    testElem.setIsoThermCond(12.345);
+    dummyDoubVectVect.clear();
+    dummyDoubVectVect = testElem.getMatMatrix();
+    std::cout << "Isotropic Material Matrix -- Known: {{12.345, 0},   Returned: {{" << dummyDoubVectVect[0][0] << ", " << dummyDoubVectVect[0][1] << "}," << std::endl;
+    std::cout << "                                     {0, 12.345}};  Returned:  {" << dummyDoubVectVect[1][0] << ", " << dummyDoubVectVect[1][1] << "}}" << std::endl;
+
+    dummyDoubVectVect.clear();
+    dummyDoubVect[0] = 4.7;
+    dummyDoubVect[1] = 0.0;
+    dummyDoubVectVect.push_back(dummyDoubVect);
+    dummyDoubVect[0] = 0.0;
+    dummyDoubVect[1] = 5.1;
+    dummyDoubVectVect.push_back(dummyDoubVect);
+    testElem.setMatMatrix(dummyDoubVectVect);
+    dummyDoubVectVect.clear();
+    dummyDoubVectVect = testElem.getMatMatrix();
+    std::cout << "Material Matrix -- Known: {{4.7, 0.0},   Returned: {{" << dummyDoubVectVect[0][0] << ", " << dummyDoubVectVect[0][1] << "}," << std::endl;
+    std::cout << "                           {0.0, 5.1}};  Returned:  {" << dummyDoubVectVect[1][0] << ", " << dummyDoubVectVect[1][1] << "}}" << std::endl;
+
+    // testElem.setShapeFuncs();
+    // std::cout << "Shape Function Vector -- " << std::endl;
+    // std::cout << "Known @ (0.25,-0.25): {0.15625, 0.46875, 0.28125, 0.09375}" << std::endl;
+    // std::vector< std::vector< double > > testVals = testElem.getShapeFuncs().evalAt(0.25,-0.25);
+    // std::cout << "Returned @ (0.25,-0.25): {" << testVals[0][0] << ", " << testVals[0][1] << ", " << testVals[0][2] << ", " << testVals[0][3] << "}" << std::endl;
+
+    testElem.setShapeFuncs();
+    std::vector< std::vector< double > > slideStiffMatrix = testElem.getStiffnessMatrix();
+    std::cout << slideStiffMatrix.size() << "," << slideStiffMatrix[0].size() << std::endl;
+    std::cout << std::endl << "Melosh Element Test from slide #35 in Lecture_3_4.pdf" << std::endl;
+    std::cout << "-----------------------------------------------------" << std::endl;
+    std::cout << "x = [1, 3, -1], y = [0, 2, 1], kxx = 4.7, kyy = 5.1, t = 1.3" << std::endl;
+    std::cout << "K_known = [[9.3492, -3.9108, -5.4383]," << std::endl;
+    std::cout << "           [-3.9108, 2.7192, 1.1917]" << std::endl;
+    std::cout << "           [-5.4383, 1.1917, 4.2467]" << std::endl;
+    std::cout << "K_test = [[" << slideStiffMatrix[0][0] << ", " << slideStiffMatrix[0][1] << ", " << slideStiffMatrix[0][2] << ", " << "],"<< std::endl;
+    std::cout << "          [" << slideStiffMatrix[1][0] << ", " << slideStiffMatrix[1][1] << ", " << slideStiffMatrix[1][2] << ", " << "],"<< std::endl;
+    std::cout << "          [" << slideStiffMatrix[2][0] << ", " << slideStiffMatrix[2][1] << ", " << slideStiffMatrix[2][2] << ", " << "]]"<< std::endl << std::endl;
+
+};
+
 
 void testElementMain() {
-    testGeneralElements();
-    testXyLinearThermalMeloshElement();
+    // testGeneralElements();
+    // testXyLinearThermalMeloshElement();
+    testXyCstThermalTriElement();
 };

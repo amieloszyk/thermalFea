@@ -60,6 +60,12 @@ int TwoDimMeshOfElements::addNewElement(std::string elemType, std::vector< std::
             dummyElement->setNodeCoords(nodeCoords);
             this->addExistingElement(elementNumb, dummyElement, globalNodeNumbs);
         }
+    } else if (nodeCoords.size() == 3) {
+        if (elemType == "cst") {
+            TwoDimThermalElement *dummyElement = new XyCstThermalTriElement();
+            dummyElement->setNodeCoords(nodeCoords);
+            this->addExistingElement(elementNumb, dummyElement, globalNodeNumbs);
+        }
     }
 
     return elementNumb;
