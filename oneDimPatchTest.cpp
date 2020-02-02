@@ -502,29 +502,27 @@ k = 10 W/m-K for all
     std::vector< std::vector< double > > dummyNodeCoords(3,std::vector< double >(2,0.0));
     std::vector< int > dummyGlobNodeMap(3);
     
-    std::cout << "Here0\n";
-
     dummyNodeCoords[0][0] = 0.0;
     dummyNodeCoords[0][1] = 0.0;
     dummyNodeCoords[1][0] = 1.5;
     dummyNodeCoords[1][1] = 0.0;
-    dummyNodeCoords[1][0] = 0.0;
-    dummyNodeCoords[1][1] = 1.0;
+    dummyNodeCoords[2][0] = 0.0;
+    dummyNodeCoords[2][1] = 1.0;
     dummyGlobNodeMap[0] = 1;
     dummyGlobNodeMap[1] = 2;
     dummyGlobNodeMap[2] = 5;
+    std::cout << "Here0\n";
     cstMesh.addNewElement("cst",dummyNodeCoords,dummyGlobNodeMap); // Error here
+    std::cout << "Here1\n";
     cstMesh.setElemThick(thick,1);
     cstMesh.setElemIsoThermCond(isoThermCond,1);
-
-    std::cout << "Here1\n";
 
     dummyNodeCoords[0][0] = 0.0;
     dummyNodeCoords[0][1] = 1.0;
     dummyNodeCoords[1][0] = 1.5;
     dummyNodeCoords[1][1] = 0.0;
-    dummyNodeCoords[1][0] = 3.0;
-    dummyNodeCoords[1][1] = 1.0;
+    dummyNodeCoords[2][0] = 3.0;
+    dummyNodeCoords[2][1] = 1.0;
     dummyGlobNodeMap[0] = 5;
     dummyGlobNodeMap[1] = 2;
     dummyGlobNodeMap[2] = 4;
@@ -536,8 +534,8 @@ k = 10 W/m-K for all
     dummyNodeCoords[0][1] = 0.0;
     dummyNodeCoords[1][0] = 1.5;
     dummyNodeCoords[1][1] = 0.0;
-    dummyNodeCoords[1][0] = 3.0;
-    dummyNodeCoords[1][1] = 1.0;
+    dummyNodeCoords[2][0] = 3.0;
+    dummyNodeCoords[2][1] = 1.0;
     dummyGlobNodeMap[0] = 3;
     dummyGlobNodeMap[1] = 2;
     dummyGlobNodeMap[2] = 4;
@@ -564,10 +562,12 @@ k = 10 W/m-K for all
     std::cout << "Here3\n";
 
     std::vector< std::vector< double > > solveStiffMat = cstMesh.getStiffMatToSolve();
+    std::cout << "Here4\n";
     std::vector< double > solveLoadVect = cstMesh.getLoadVectToSolve();
+    std::cout << "Here5\n";
     std::vector< double > calcNodeTemps = gaussianElimSolve(solveStiffMat,solveLoadVect);
     
-    std::cout << "Here4\n";
+    std::cout << "Here6\n";
 
     std::vector< std::vector< double > > rawStiffMat = cstMesh.getRawGlobStiffMatrix();
     std::vector< double > rawLoadVect = cstMesh.getRawGlobLoadVect();
@@ -592,6 +592,6 @@ void patchMain() {
     // slideOneElementMeshTest();
     // oneElementMeshTest();
     // threeElementMeshTest();
-    // nineElementMeshTest();
+    //nineElementMeshTest();
     threeCstElementMeshTest();
 };

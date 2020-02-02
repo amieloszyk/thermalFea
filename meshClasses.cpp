@@ -43,6 +43,7 @@ void TwoDimMeshOfElements::resizeNodesAndElements(){
 int TwoDimMeshOfElements::addNewElement(std::string elemType, std::vector< std::vector< double > > nodeCoords,
                                         std::vector< int > globalNodeNumbs){
     
+    std::cout << elemType;
     this->numbOfElements++;
     int elementNumb = this->numbOfElements;
     int newNodes = 0;
@@ -63,7 +64,7 @@ int TwoDimMeshOfElements::addNewElement(std::string elemType, std::vector< std::
     } else if (nodeCoords.size() == 3) {
         if (elemType == "cst") {
             TwoDimThermalElement *dummyElement = new XyCstThermalTriElement();
-            dummyElement->setNodeCoords(nodeCoords);
+            dummyElement->setNodeCoords(nodeCoords); // Looks like the node locations are off
             this->addExistingElement(elementNumb, dummyElement, globalNodeNumbs);
         }
     }
@@ -118,7 +119,7 @@ void TwoDimMeshOfElements::addExistingElement(int elementNumb, TwoDimThermalElem
     // This should be moved to the calling function, it should not be separate from the list extension step
     std::vector< int > newNodeIdx(0);
     int nodeNumb;
-    for(int idx=0; idx < 4; idx++){
+    for(int idx=0; idx < globalNodeNumbs.size(); idx++){ // Issue with the limit for this loop?
         nodeNumb = globalNodeNumbs[idx];
         if(this->getNodeIdx(nodeNumb) == -1) {
             newNodeIdx.push_back(idx);
@@ -138,7 +139,7 @@ void TwoDimMeshOfElements::addExistingElement(int elementNumb, TwoDimThermalElem
     int globNodeIdx;
     for(int locNodeIdx = 0; locNodeIdx < globalNodeNumbs.size(); locNodeIdx++) {
         globNodeNumb = globalNodeNumbs[locNodeIdx];
-        globNodeIdx = this->getNodeIdx(globNodeNumb);
+        globNodeIdx = this->getNodeIdx(globNodeNumb); // This mapping is off for CST...
         this->nodeCoords[globNodeIdx] = newNodeCoords[locNodeIdx];
     };
 

@@ -195,10 +195,12 @@ DOF:
         std::vector< std::vector< double > > getStiffnessMatrix();
 
         // Not implemented
-        
+        std::vector<double> getLoadOnSurf(int surfNumb);
+        std::vector<double> getTotalLoadVect();
+
         //void setSurfaceLoadInLocCoords(int surfNumb, OneDimPoly locLoadShape);
-        //std::vector<double> getLoadOnSurf(int surfNumb);
-        //std::vector<double> getTotalLoadVect();
+        
+        
         //void setBodyLoad(TwoDimPoly loadShape);
         //std::vector<double> getBodyLoadVect();
         
