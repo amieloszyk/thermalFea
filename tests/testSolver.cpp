@@ -1,8 +1,8 @@
-#include <iostream>
-// #include <vector>
-#include "solverClasses.cpp"
+#include <thermalFea/solverClasses.hpp>
 
-int main() {
+#include <iostream>
+
+void testSolver() {
     std::vector< std::vector< double > > given_aMatrix;
     std::vector< double > given_bVector;
     std::vector< double > fillerVect;

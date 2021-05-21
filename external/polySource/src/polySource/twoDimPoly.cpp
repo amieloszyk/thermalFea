@@ -1,4 +1,5 @@
-#include "twoDimPolyClass.h"
+#include <polySource/twoDimPolyClass.hpp>
+
 #include <math.h>
 #include <algorithm>
 #include <iostream>

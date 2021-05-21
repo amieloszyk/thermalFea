@@ -1,7 +1,10 @@
+#pragma once
+
+#include <thermalFea/elementClasses.hpp>
+//#include "polySource/oneDimPoly.cpp"
+
 #include <vector>
 #include <string>
-#include "elementClasses.cpp"
-//#include "polySource/oneDimPoly.cpp"
 
 
 class TwoDimMeshOfElements {

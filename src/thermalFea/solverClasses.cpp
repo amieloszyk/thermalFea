@@ -1,5 +1,4 @@
-#include <vector>
-#include <iostream>
+#include <thermalFea/solverClasses.hpp>
 
 std::vector< double > gaussianElimSolve(std::vector< std::vector< double > > aMatrix,
                                         std::vector< double > bVector) {

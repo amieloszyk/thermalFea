@@ -1,5 +1,8 @@
+#pragma once
+
+#include "oneDimPolyClass.hpp"
+
 #include <vector>
-#include "oneDimPoly.cpp"
 
 class TwoDimPoly {
 

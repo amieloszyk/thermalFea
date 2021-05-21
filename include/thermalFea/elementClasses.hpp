@@ -1,5 +1,8 @@
+#pragma once
+
+#include <thermalFea/polyArray.hpp>
+
 #include <vector>
-#include "polyArray.cpp"
 
 class ThermalElement {
     /* 

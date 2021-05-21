@@ -1,8 +1,9 @@
+#include <thermalFea/polyArray.hpp>
+
 #include <iostream>
 #include <math.h>
-#include "polyArray.cpp"
 
-int main() {
+void testPolyArray() {
 
     std::vector<OneDimPoly> oneDimPolyVect;
     std::vector<double> oneDimCoeffs;
@@ -225,6 +226,4 @@ int main() {
     std::cout << "grad(N_test)(1.0,0.5) = [[" << testXyFuncGradVals[0][0] << ", " << testXyFuncGradVals[0][1] << ", " << testXyFuncGradVals[0][2] << ", " << testXyFuncGradVals[0][3] <<  "]" << std::endl;
     std::cout << "                         [" << testXyFuncGradVals[1][0] << ", " << testXyFuncGradVals[1][1] << ", " << testXyFuncGradVals[1][2] << ", " << testXyFuncGradVals[1][3] <<  "]]" << std::endl << std::endl;
 
-
-
-}; 
+}
