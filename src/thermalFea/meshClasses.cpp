@@ -1,6 +1,7 @@
-#include "meshClasses.h"
 #include <iostream>
 #include <algorithm>
+
+#include <thermalFea/meshClasses.hpp>
 
 TwoDimMeshOfElements::TwoDimMeshOfElements(int nodesInMesh, int elementsInMesh) {
     

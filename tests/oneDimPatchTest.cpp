@@ -3,11 +3,11 @@ All of these cases are of a 1-D problem with a heat flux of -1000 on the right
 side and a set temperature of 100 on the left and a conductivity of 10 and a 
 width of 3
 */
+#include <thermalFea/meshClasses.hpp>
+#include <thermalFea/solverClasses.hpp>
 
 #include <iostream>
 #include <vector>
-#include "meshClasses.cpp"
-#include "solverClasses.cpp"
 
 void printMatrix(std::vector< std::vector< double > > matrixToPrint) { 
     // TODO: Move this to a more generally accesssible location
@@ -123,7 +123,7 @@ void slideOneElementMeshTest() {
     std::cout << "-2.7993, -2.1407, 0.6587, 4.2813" << std::endl;
     std::cout << std::endl;
 
-};
+}
 
 void oneElementMeshTest() {
 
@@ -197,7 +197,7 @@ void oneElementMeshTest() {
     std::cout << "Calculated Node Values:" << std::endl;
     printMatrix(calcNodeTemps);
 
-};
+}
 
 void threeElementMeshTest() {
     
@@ -311,7 +311,7 @@ void threeElementMeshTest() {
     std::cout << "Calculated Node Values:" << std::endl;
     printMatrix(calcNodeTemps);
 
-};
+}
 
 void nineElementMeshTest() {
 /*
@@ -586,12 +586,4 @@ k = 10 W/m-K for all
     std::cout << "Calculated Node Values:" << std::endl;
     printMatrix(calcNodeTemps);
 
-};
-
-void patchMain() {
-    // slideOneElementMeshTest();
-    // oneElementMeshTest();
-    // threeElementMeshTest();
-    //nineElementMeshTest();
-    threeCstElementMeshTest();
-};
+}

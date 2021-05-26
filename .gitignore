@@ -1,3 +1,8 @@
+# Build folder (likely means we can eliminate most of the rest)
+build
+
+.DS_Store
+
 # Compiled Object files
 *.slo
 *.lo

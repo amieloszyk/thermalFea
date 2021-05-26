@@ -1,4 +1,5 @@
-#include "polyArray.h"
+#include <thermalFea/polyArray.hpp>
+
 #include <iostream>
 
 PolyArray::PolyArray() {

@@ -1,6 +1,7 @@
+#include <thermalFea/elementClasses.hpp>
+
 #include <iostream>
 #include <vector>
-#include "elementClasses.cpp"
 
 void testGeneralElements() {
 
@@ -68,7 +69,7 @@ void testGeneralElements() {
     std::cout << std::endl << std::endl;
 
 
-};
+}
 
 
 void testXyLinearThermalMeloshElement() {
@@ -249,7 +250,8 @@ void testXyLinearThermalMeloshElement() {
     std::cout << "Found load from Surface #1 (transposed): [" << surfFourLoad[0] << " ," << surfFourLoad[1] << " ," << surfFourLoad[2] << " ," << surfFourLoad[3] << "]" << std::endl;
     std::cout << "" << std::endl;
 
-};
+}
+
 
 void testXyCstThermalTriElement(){
 
@@ -362,11 +364,4 @@ void testXyCstThermalTriElement(){
     std::cout << "          [" << slideStiffMatrix[1][0] << ", " << slideStiffMatrix[1][1] << ", " << slideStiffMatrix[1][2] << ", " << "],"<< std::endl;
     std::cout << "          [" << slideStiffMatrix[2][0] << ", " << slideStiffMatrix[2][1] << ", " << slideStiffMatrix[2][2] << ", " << "]]"<< std::endl << std::endl;
 
-};
-
-
-void testElementMain() {
-    // testGeneralElements();
-    // testXyLinearThermalMeloshElement();
-    testXyCstThermalTriElement();
-};
+}

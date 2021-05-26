@@ -1,6 +1,8 @@
 # thermalFea
 First try at thermal conduction FEA using C++
 
+This is my first C++ project and it is very much a learning experience on how to use it.
+
 
 Things to do:
 

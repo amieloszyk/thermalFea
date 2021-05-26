@@ -1,7 +1,7 @@
-#include "oneDimPolyClass.h"
+#include <polySource/oneDimPolyClass.hpp>
+
 #include <math.h>
 #include <algorithm>
-
 #include <iostream>
 
 OneDimPoly::OneDimPoly(std::vector<double> inpCoeffArray){

@@ -1,5 +1,8 @@
+#pragma once
+
+#include <polySource/twoDimPolyClass.hpp>
+
 #include <vector>
-#include "polySource/twoDimPoly.cpp"
 
 class PolyArray {
 
