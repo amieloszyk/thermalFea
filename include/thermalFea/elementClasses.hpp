@@ -201,7 +201,7 @@ DOF:
         std::vector<double> getLoadOnSurf(int surfNumb);
         std::vector<double> getTotalLoadVect();
 
-        //void setSurfaceLoadInLocCoords(int surfNumb, OneDimPoly locLoadShape);
+        void setSurfaceLoadInLocCoords(int surfNumb, OneDimPoly locLoadShape);
         
         
         //void setBodyLoad(TwoDimPoly loadShape);

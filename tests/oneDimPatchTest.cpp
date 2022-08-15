@@ -481,7 +481,6 @@ void nineElementMeshTest() {
 };
 
 void threeCstElementMeshTest() {
-    
 /*
              5              4
        100K  +--------------+
@@ -502,77 +501,42 @@ k = 10 W/m-K for all
     std::vector< std::vector< double > > dummyNodeCoords(3,std::vector< double >(2,0.0));
     std::vector< int > dummyGlobNodeMap(3);
     
-    dummyNodeCoords[0][0] = 0.0;
-    dummyNodeCoords[0][1] = 0.0;
-    dummyNodeCoords[1][0] = 1.5;
-    dummyNodeCoords[1][1] = 0.0;
-    dummyNodeCoords[2][0] = 0.0;
-    dummyNodeCoords[2][1] = 1.0;
-    dummyGlobNodeMap[0] = 1;
-    dummyGlobNodeMap[1] = 2;
-    dummyGlobNodeMap[2] = 5;
-    std::cout << "Here0\n";
-    cstMesh.addNewElement("cst",dummyNodeCoords,dummyGlobNodeMap); // Error here
-    std::cout << "Here1\n";
-    cstMesh.setElemThick(thick,1);
+    dummyNodeCoords = {{0.0, 0.0}, {1.5, 0.0}, {0.0, 1.0}};
+    dummyGlobNodeMap = {1, 2, 5};
+    cstMesh.addNewElement("cst",dummyNodeCoords,dummyGlobNodeMap);
+    cstMesh.setElemThick(thick, 1);
     cstMesh.setElemIsoThermCond(isoThermCond,1);
 
-    dummyNodeCoords[0][0] = 0.0;
-    dummyNodeCoords[0][1] = 1.0;
-    dummyNodeCoords[1][0] = 1.5;
-    dummyNodeCoords[1][1] = 0.0;
-    dummyNodeCoords[2][0] = 3.0;
-    dummyNodeCoords[2][1] = 1.0;
-    dummyGlobNodeMap[0] = 5;
-    dummyGlobNodeMap[1] = 2;
-    dummyGlobNodeMap[2] = 4;
+    dummyNodeCoords = {{0.0, 1.0}, {1.5, 0.0}, {3.0, 1.0}};
+    dummyGlobNodeMap = {5, 2, 4};
     cstMesh.addNewElement("cst",dummyNodeCoords,dummyGlobNodeMap);
     cstMesh.setElemThick(thick,2);
     cstMesh.setElemIsoThermCond(isoThermCond,2);
 
-    dummyNodeCoords[0][0] = 3.0;
-    dummyNodeCoords[0][1] = 0.0;
-    dummyNodeCoords[1][0] = 1.5;
-    dummyNodeCoords[1][1] = 0.0;
-    dummyNodeCoords[2][0] = 3.0;
-    dummyNodeCoords[2][1] = 1.0;
-    dummyGlobNodeMap[0] = 3;
-    dummyGlobNodeMap[1] = 2;
-    dummyGlobNodeMap[2] = 4;
+    dummyNodeCoords = {{1.5, 0.0}, {3.0, 0.0}, {3.0, 1.0}};
+    dummyGlobNodeMap = {2, 3, 4};
     cstMesh.addNewElement("cst",dummyNodeCoords,dummyGlobNodeMap);
     cstMesh.setElemThick(thick,3);
     cstMesh.setElemIsoThermCond(isoThermCond,3);
 
     int surfOneId = cstMesh.makeNewSurf();
-    cstMesh.addLocSurfToMesh(surfOneId, 3, 3);
+    cstMesh.addLocSurfToMesh(surfOneId, 3, 2);
     cstMesh.setScalarSurfFlux(surfOneId, 1000.0);
 
     int surfTwoId = cstMesh.makeNewSurf();
     cstMesh.addLocSurfToMesh(surfTwoId, 1, 3);
     cstMesh.setScalarSurfFlux(surfTwoId, -1000.0);
 
-    std::cout << "Here2\n";
-    
-    std::vector< int > nodeWithSetVal(2);
-    nodeWithSetVal[0] = 1;
-    nodeWithSetVal[1] = 5;
-    std::vector< double > setNodeVal(2,100.0);
+    std::vector< int > nodeWithSetVal = {1, 5};
+    std::vector< double > setNodeVal = {100.0, 100.0};
     cstMesh.setFixedNodeVals(nodeWithSetVal, setNodeVal);
 
-    std::cout << "Here3\n";
-
     std::vector< std::vector< double > > solveStiffMat = cstMesh.getStiffMatToSolve();
-    std::cout << "Here4\n";
     std::vector< double > solveLoadVect = cstMesh.getLoadVectToSolve();
-    std::cout << "Here5\n";
     std::vector< double > calcNodeTemps = gaussianElimSolve(solveStiffMat,solveLoadVect);
-    
-    std::cout << "Here6\n";
 
     std::vector< std::vector< double > > rawStiffMat = cstMesh.getRawGlobStiffMatrix();
     std::vector< double > rawLoadVect = cstMesh.getRawGlobLoadVect();
-
-    std::cout << "Here5\n";
 
     std::cout << "Raw K-Matrix:" << std::endl;
     printMatrix(rawStiffMat);
@@ -585,5 +549,144 @@ k = 10 W/m-K for all
     printMatrix(solveLoadVect);
     std::cout << "Calculated Node Values:" << std::endl;
     printMatrix(calcNodeTemps);
+}
 
+void twoCstElementMeshTest() {
+/*
+             4           3
+       100K  +-----------+
+           <-| \         |<-
+           <-|   \    2  |<-
+ 1000 W/m2 <-|     \     |<- 1000 W/m2
+           <-|  1    \   |<-
+           <-|         \ |<-
+             +-----------+
+             1           2
+k = 10 W/m-K for all
+*/
+
+    double thick = 1.0;
+    double isoThermCond = 10.0;
+    
+    TwoDimMeshOfElements cstMesh;
+    std::vector< std::vector< double > > dummyNodeCoords(3,std::vector< double >(2,0.0));
+    std::vector< int > dummyGlobNodeMap(3);
+    
+    dummyNodeCoords = {{0.0, 0.0}, {1.0, 0.0}, {0.0, 1.0}};
+    dummyGlobNodeMap = {1, 2, 4};
+    cstMesh.addNewElement("cst",dummyNodeCoords,dummyGlobNodeMap);
+    cstMesh.setElemThick(thick, 1);
+    cstMesh.setElemIsoThermCond(isoThermCond,1);
+
+    dummyNodeCoords = {{1.0, 0.0}, {1.0, 1.0}, {0.0, 1.0}};
+    dummyGlobNodeMap = {2, 3, 4};
+    cstMesh.addNewElement("cst",dummyNodeCoords,dummyGlobNodeMap);
+    cstMesh.setElemThick(thick,2);
+    cstMesh.setElemIsoThermCond(isoThermCond,2);
+
+    int surfOneId = cstMesh.makeNewSurf();
+    cstMesh.addLocSurfToMesh(surfOneId, 2, 1);
+    cstMesh.setScalarSurfFlux(surfOneId, 1000.0);
+
+    int surfTwoId = cstMesh.makeNewSurf();
+    cstMesh.addLocSurfToMesh(surfTwoId, 1, 3);
+    cstMesh.setScalarSurfFlux(surfTwoId, -1000.0);
+
+    std::vector< int > nodeWithSetVal = {1, 4};
+    std::vector< double > setNodeVal = {100.0, 100.0};
+    cstMesh.setFixedNodeVals(nodeWithSetVal, setNodeVal);
+
+    std::vector< std::vector< double > > solveStiffMat = cstMesh.getStiffMatToSolve();
+    std::vector< double > solveLoadVect = cstMesh.getLoadVectToSolve();
+    std::vector< double > calcNodeTemps = gaussianElimSolve(solveStiffMat,solveLoadVect);
+
+    std::vector< std::vector< double > > rawStiffMat = cstMesh.getRawGlobStiffMatrix();
+    std::vector< double > rawLoadVect = cstMesh.getRawGlobLoadVect();
+
+    std::cout << "Raw K-Matrix:" << std::endl;
+    printMatrix(rawStiffMat);
+    std::cout << "Raw Load Vector:" << std::endl;
+    printMatrix(rawLoadVect);
+
+    std::cout << "Solvable K-Matrix:" << std::endl;
+    printMatrix(solveStiffMat);
+    std::cout << "Solvable Load Vector:" << std::endl;
+    printMatrix(solveLoadVect);
+    std::cout << "Calculated Node Values:" << std::endl;
+    printMatrix(calcNodeTemps);
+}
+
+void fourCstElementMeshTestFullyBound() {
+/*
+             6           5           4
+       100K  +-----------+-----------+ 300K
+           <-| \         | \         |<-
+           <-|   \    2  |   \    4  |<-
+           <-|     \     |     \     |<-
+           <-|  1    \   |  3    \   |<-
+           <-|         \ |         \ |<-
+             +-----------+-----------+
+             1           2           3
+k = 10 W/m-K for all
+*/
+
+    double thick = 1.0;
+    double isoThermCond = 10.0;
+    
+    TwoDimMeshOfElements cstMesh;
+    std::vector< std::vector< double > > dummyNodeCoords(3,std::vector< double >(2,0.0));
+    std::vector< int > dummyGlobNodeMap(3);
+    
+    dummyNodeCoords = {{0.0, 0.0}, {1.0, 0.0}, {0.0, 1.0}};
+    dummyGlobNodeMap = {1, 2, 6};
+    cstMesh.addNewElement("cst",dummyNodeCoords,dummyGlobNodeMap);
+    cstMesh.setElemThick(thick, 1);
+    cstMesh.setElemIsoThermCond(isoThermCond, 1);
+
+    dummyNodeCoords = {{1.0, 0.0}, {1.0, 1.0}, {0.0, 1.0}};
+    dummyGlobNodeMap = {2, 5, 6};
+    cstMesh.addNewElement("cst",dummyNodeCoords,dummyGlobNodeMap);
+    cstMesh.setElemThick(thick, 2);
+    cstMesh.setElemIsoThermCond(isoThermCond, 2);
+
+
+
+    dummyNodeCoords = {{1.0, 0.0}, {2.0, 0.0}, {1.0, 1.0}};
+    dummyGlobNodeMap = {2, 3, 5};
+    cstMesh.addNewElement("cst",dummyNodeCoords,dummyGlobNodeMap);
+    cstMesh.setElemThick(thick, 3);
+    cstMesh.setElemIsoThermCond(isoThermCond, 3);
+
+    dummyNodeCoords = {{2.0, 0.0}, {2.0, 1.0}, {1.0, 1.0}};
+    dummyGlobNodeMap = {3, 4, 5};
+    cstMesh.addNewElement("cst",dummyNodeCoords,dummyGlobNodeMap);
+    cstMesh.setElemThick(thick, 4);
+    cstMesh.setElemIsoThermCond(isoThermCond, 4);
+
+    std::vector< int > nodeWithSetVal = {1, 6};
+    std::vector< double > setNodeVal = {100.0, 100.0};
+    cstMesh.setFixedNodeVals(nodeWithSetVal, setNodeVal);
+
+    nodeWithSetVal = {3, 4};
+    setNodeVal = {300.0, 300.0};
+    cstMesh.setFixedNodeVals(nodeWithSetVal, setNodeVal);
+
+    std::vector< std::vector< double > > solveStiffMat = cstMesh.getStiffMatToSolve();
+    std::vector< double > solveLoadVect = cstMesh.getLoadVectToSolve();
+    std::vector< double > calcNodeTemps = gaussianElimSolve(solveStiffMat,solveLoadVect);
+
+    std::vector< std::vector< double > > rawStiffMat = cstMesh.getRawGlobStiffMatrix();
+    std::vector< double > rawLoadVect = cstMesh.getRawGlobLoadVect();
+
+    std::cout << "Raw K-Matrix:" << std::endl;
+    printMatrix(rawStiffMat);
+    std::cout << "Raw Load Vector:" << std::endl;
+    printMatrix(rawLoadVect);
+
+    std::cout << "Solvable K-Matrix:" << std::endl;
+    printMatrix(solveStiffMat);
+    std::cout << "Solvable Load Vector:" << std::endl;
+    printMatrix(solveLoadVect);
+    std::cout << "Calculated Node Values:" << std::endl;
+    printMatrix(calcNodeTemps);
 }

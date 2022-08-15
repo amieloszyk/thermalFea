@@ -44,7 +44,6 @@ void TwoDimMeshOfElements::resizeNodesAndElements(){
 int TwoDimMeshOfElements::addNewElement(std::string elemType, std::vector< std::vector< double > > nodeCoords,
                                         std::vector< int > globalNodeNumbs){
     
-    std::cout << elemType;
     this->numbOfElements++;
     int elementNumb = this->numbOfElements;
     int newNodes = 0;

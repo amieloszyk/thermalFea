@@ -6,6 +6,7 @@
 #include <thermalFea/mathUtils.hpp>
 
 #include <iostream>
+#include <string.h>
 
 int main(int argc, char *argv[]) {
     //testElementMain(); // testElementClasses.cpp
@@ -42,6 +43,15 @@ int main(int argc, char *argv[]) {
         }
         if (strcmp(argv[idx], "threeCstElementMeshTest") == 0){
             threeCstElementMeshTest();
+        }
+        if (strcmp(argv[idx], "twoCstElementMeshTest") == 0){
+            twoCstElementMeshTest();
+        }
+        if (strcmp(argv[idx], "testXyCstThermalTriElement") == 0){
+            testXyCstThermalTriElement();
+        }
+        if (strcmp(argv[idx], "fourCstElementMeshTestFullyBound") == 0){
+            fourCstElementMeshTestFullyBound();
         }
     }
 }

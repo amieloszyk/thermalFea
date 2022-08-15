@@ -256,7 +256,7 @@ void testXyLinearThermalMeloshElement() {
 void testXyCstThermalTriElement(){
 
     XyCstThermalTriElement testElem;
-    std::cout << "Test X-Y Thermal Melosh Element Class Functionality:" << std::endl;
+    std::cout << "Test X-Y Constant Strain Triangle Element Class Functionality:" << std::endl;
     std::cout << "----------------------------------------------------" << std::endl;
 
     std::cout << "Number of Nodes -- Known: 3; Returned: " << testElem.getNumberOfNodes() << std::endl;

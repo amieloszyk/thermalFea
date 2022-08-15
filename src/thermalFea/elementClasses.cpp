@@ -3,6 +3,8 @@
 #include <cmath>
 #include <iostream>
 
+constexpr double PI = 3.14159265;
+
 ThermalElement::ThermalElement() {
     this->numbOfNodes = 0;
 };
@@ -607,10 +609,14 @@ std::vector<double> XyCstThermalTriElement::getLoadOnSurf(int surfNumb){
 
         double xn = this->nodeGlobCoordVect[surfIdx][0];
         double yn = this->nodeGlobCoordVect[surfIdx][1];
-        double deltaX = this->nodeGlobCoordVect[surfIdx][0]-this->nodeGlobCoordVect[nextNode][0];
-        double deltaY = this->nodeGlobCoordVect[surfIdx][1]-this->nodeGlobCoordVect[nextNode][1];
-        double length = std::sqrt(std::pow(deltaX,2)+std::pow(deltaY,2));
-        double theta = std::atan(deltaY/deltaX);
+        double deltaX = this->nodeGlobCoordVect[surfIdx][0] - this->nodeGlobCoordVect[nextNode][0];
+        double deltaY = this->nodeGlobCoordVect[surfIdx][1] - this->nodeGlobCoordVect[nextNode][1];
+        double length = std::sqrt(std::pow(deltaX, 2) + std::pow(deltaY, 2));
+        double theta = std::atan2(deltaY, deltaX);
+        
+        const double thetaPlus90 = theta + PI / 2.0;
+        const double surfaceNormalX = std::cos(thetaPlus90);
+        const double surfaceNormalY = std::sin(thetaPlus90);
 
         for (int nodeIdx = 0; nodeIdx < this->numbOfNodes; ++nodeIdx) {
             if (nodeIdx == surfIdx || nodeIdx == nextNode) {
@@ -620,8 +626,9 @@ std::vector<double> XyCstThermalTriElement::getLoadOnSurf(int surfNumb){
                                     this->invNatTransMatrix[nodeIdx][2] * yn;
                 oneDimCoeffVect[1] = this->invNatTransMatrix[nodeIdx][1] * std::cos(theta) +
                                     this->invNatTransMatrix[nodeIdx][2] * std::sin(theta);
-                OneDimPoly tempOneDimPoly(oneDimCoeffVect);
 
+                // todo (ajm): this works for scalar, probably needs to consider directionality for non-scalar
+                OneDimPoly tempOneDimPoly({0, 1.0});
                 tempOneDimPoly = tempOneDimPoly.multScalar(elemThickness);
                 tempOneDimPoly = tempOneDimPoly.multOneDimPoly(this->locSurfLoads[surfIdx]);
                 surfLoadVect[nodeIdx] = tempOneDimPoly.findIntegralOverRange(0.0, length);
@@ -649,3 +656,12 @@ std::vector<double> XyCstThermalTriElement::getTotalLoadVect() {
 
     return totalLoad;
 };
+
+void XyCstThermalTriElement::setSurfaceLoadInLocCoords(int surfNumb, OneDimPoly locLoadShape) {
+
+    int surfIdx = surfNumb - 1;
+    this->loadOnSurf[surfIdx] = true;
+    this->locSurfLoads[surfIdx].multScalar(0.0);
+    this->locSurfLoads[surfIdx] = this->locSurfLoads[surfIdx].addOneDimPoly(locLoadShape);
+
+}

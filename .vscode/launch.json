@@ -2,41 +2,46 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "C++ Launch",
-            "preLaunchTask": "debugTestMain",
+            "name": "thermalFeaTests",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceRoot}/runTestMain",
-            "args": [],
+            "program": "${workspaceFolder}/build/Debug/thermalFeaTests",
+            "args": ["${input:testName}"],
             "stopAtEntry": false,
-            "cwd": "${workspaceRoot}",
+            "cwd": "${workspaceFolder}/build/Debug",
             "environment": [],
-            "externalConsole": true,
-            "linux": {
-                "MIMode": "gdb"
-            },
-            "osx": {
-                "MIMode": "lldb"
-            },
-            "windows": {
-                "MIMode": "gdb"
-            }
-        },
-        {
-            "name": "C++ Attach",
-            "type": "cppdbg",
-            "request": "attach",
-            "program": "enter program name, for example ${workspaceRoot}/a.out",
-            "processId": "${command.pickProcess}",
-            "linux": {
-                "MIMode": "gdb"
-            },
-            "osx": {
-                "MIMode": "lldb"
-            },
-            "windows": {
-                "MIMode": "gdb"
-            }
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                },
+                {
+                    "description":  "Set Disassembly Flavor to Intel",
+                    "text": "-gdb-set disassembly-flavor intel",
+                    "ignoreFailures": true
+                }
+            ]
         }
+    ],
+    "inputs": [
+        {"id":"testName",
+         "description": "name of the test to run",
+         "type": "pickString",
+         "options": ["testPolyArray",
+                     "testSolver",
+                     "testGeneralElements",
+                     "testXyLinearThermalMeloshElement",
+                     "testXyCstThermalTriElement",
+                     "slideOneElementMeshTest",
+                     "oneElementMeshTest",
+                     "threeElementMeshTest",
+                     "nineElementMeshTest",
+                     "threeCstElementMeshTest",
+                     "twoCstElementMeshTest",
+                     "testXyCstThermalTriElement",
+                     "fourCstElementMeshTestFullyBound"]}
     ]
 }
